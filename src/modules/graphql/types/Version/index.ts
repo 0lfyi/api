@@ -13,6 +13,7 @@ const transactions = async (
     }
   });
   return transactions.map((transaction) => ({
+    version: transaction.version,
     hash: transaction.hash.toString('hex'),
     gasUsed: new BN(transaction.gasUsed.toString(10)),
     vmStatus: transaction.vmStatus,

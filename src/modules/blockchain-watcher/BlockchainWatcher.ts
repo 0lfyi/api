@@ -69,8 +69,6 @@ class BlockchainWatcher {
 
   private logger = rootLogger.child({ source: this.constructor.name });
 
-  private missingVersionsManager?: MissingVersionsManager;
-
   private constructor() {
     this.provider = new Provider(config.providerUrl);
   }
@@ -92,7 +90,7 @@ class BlockchainWatcher {
       });
     }, 5_000);
 
-    this.missingVersionsManager = await MissingVersionsManager.create(this);
+    const missingVersionsManager = await MissingVersionsManager.create(this);
 
     // console.log('fetching....');
     // const accounts: { sender: Buffer }[] = await prisma.$queryRaw`
