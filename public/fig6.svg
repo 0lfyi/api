@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="710px" height="354px" viewBox="0 0 710 354" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Artboard</title>
+    <defs>
+        <polygon id="path-1" points="0 0 292 0 292 244 0 244"></polygon>
+        <polygon id="path-3" points="0 0 293 0 293 246 0 246"></polygon>
+    </defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="0" y="0" width="710" height="354"></rect>
+        <text id="(b)-Effect-of-enrolm" font-family="TimesNewRomanPSMT, Times New Roman" font-size="19.5" font-weight="normal" fill="#000000">
+            <tspan x="392" y="301">(b) Effect of enrolment or receipt </tspan>
+            <tspan x="392" y="322">processing.</tspan>
+        </text>
+        <text id="(a)-Accuracy-of-QRC" font-family="TimesNewRomanPSMT, Times New Roman" font-size="19.5" font-weight="normal" fill="#000000">
+            <tspan x="48" y="301">(a) Accuracy of QRC vs settlement </tspan>
+            <tspan x="48" y="322">time period.</tspan>
+        </text>
+        <g id="Group" transform="translate(34.000000, 19.000000)">
+            <g id="Group-284">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-283"></g>
+                <polygon id="Fill-282" fill="#FFFFFF" mask="url(#mask-2)" points="-20.8843478 251.867328 315.120193 251.867328 315.120193 0 -20.8843478 0"></polygon>
+            </g>
+            <polygon id="Fill-285" fill="#FFFFFF" points="22.7798792 224.135968 283.160652 224.135968 283.160652 18.892518 22.7798792 18.892518"></polygon>
+            <polyline id="Stroke-286" stroke="#FFFFFF" stroke-width="0.165" stroke-linejoin="round" points="22.7798792 224.135968 22.7798792 18.892518 283.160652 18.892518 283.160652 224.135968 22.7798792 224.135968"></polyline>
+            <path d="M22.7798792,224.135968 L283.160652,224.135968 M22.7798792,201.309786 L283.160652,201.309786 M22.7798792,178.483604 L283.160652,178.483604 M22.7798792,155.705028 L283.160652,155.705028 M22.7798792,132.878846 L283.160652,132.878846 M22.7798792,110.10027 L283.160652,110.10027 M22.7798792,87.2740884 L283.160652,87.2740884 M22.7798792,64.4972757 L283.160652,64.4972757 M22.7798792,41.6710939 L283.160652,41.6710939 M22.7798792,18.892518 L283.160652,18.892518" id="Stroke-287" stroke="#000000" stroke-width="0.11" stroke-linejoin="round" stroke-dasharray="0.165,1.322"></path>
+            <path d="M22.7798792,224.135968 L283.160652,224.135968 M22.7798792,18.892518 L283.160652,18.892518 M22.7798792,224.135968 L22.7798792,18.892518 M283.160652,224.135968 L283.160652,18.892518 M22.7798792,224.135968 L283.160652,224.135968 M22.7798792,224.135968 L22.7798792,18.892518 M22.7798792,224.135968 L22.7798792,221.51235 M22.7798792,18.892518 L22.7798792,21.4667669" id="Stroke-288" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="500" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="17.9229106" y="231.25788">500</tspan>
+            </text>
+            <path d="M59.9358213,224.135968 L59.9358213,221.51235 M59.9358213,18.892518 L59.9358213,21.4667669" id="Stroke-289" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="1000" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="53.4758502" y="231.25788">1000</tspan>
+            </text>
+            <path d="M97.139372,224.135968 L97.139372,221.51235 M97.139372,18.892518 L97.139372,21.4667669" id="Stroke-290" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="1500" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="90.6801063" y="231.25788">1500</tspan>
+            </text>
+            <path d="M134.344686,224.135968 L134.344686,221.51235 M134.344686,18.892518 L134.344686,21.4667669" id="Stroke-291" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="2000" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="127.884362" y="231.25788">2000</tspan>
+            </text>
+            <path d="M171.548237,224.135968 L171.548237,221.51235 M171.548237,18.892518 L171.548237,21.4667669" id="Stroke-292" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="2500" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="165.088618" y="231.25788">2500</tspan>
+            </text>
+            <path d="M208.751787,224.135968 L208.751787,221.51235 M208.751787,18.892518 L208.751787,21.4667669" id="Stroke-293" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="3000" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="202.292874" y="231.25788">3000</tspan>
+            </text>
+            <path d="M245.957101,224.135968 L245.957101,221.51235 M245.957101,18.892518 L245.957101,21.4667669" id="Stroke-294" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="3500" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="239.49713" y="231.25788">3500</tspan>
+            </text>
+            <path d="M283.160652,224.135968 L283.160652,221.51235 M283.160652,18.892518 L283.160652,21.4667669" id="Stroke-295" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="4000" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="276.701386" y="231.25788">4000</tspan>
+            </text>
+            <path d="M22.7798792,224.135968 L25.3542754,224.135968 M283.160652,224.135968 L280.538647,224.135968" id="Stroke-296" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="0" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="17.8744203" y="226.352702">0</tspan>
+            </text>
+            <path d="M22.7798792,201.309786 L25.3542754,201.309786 M283.160652,201.309786 L280.538647,201.309786" id="Stroke-297" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="10" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="203.526344">10</tspan>
+            </text>
+            <path d="M22.7798792,178.483604 L25.3542754,178.483604 M283.160652,178.483604 L280.538647,178.483604" id="Stroke-298" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="20" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="180.699809">20</tspan>
+            </text>
+            <path d="M22.7798792,155.705028 L25.3542754,155.705028 M283.160652,155.705028 L280.538647,155.705028" id="Stroke-299" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="30" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="157.922115">30</tspan>
+            </text>
+            <path d="M22.7798792,132.878846 L25.3542754,132.878846 M283.160652,132.878846 L280.538647,132.878846" id="Stroke-300" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="40" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="135.095757">40</tspan>
+            </text>
+            <path d="M22.7798792,110.10027 L25.3542754,110.10027 M283.160652,110.10027 L280.538647,110.10027" id="Stroke-301" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="50" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="112.317886">50</tspan>
+            </text>
+            <path d="M22.7798792,87.2740884 L25.3542754,87.2740884 M283.160652,87.2740884 L280.538647,87.2740884" id="Stroke-302" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="60" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="89.491528">60</tspan>
+            </text>
+            <path d="M22.7798792,64.4972757 L25.3542754,64.4972757 M283.160652,64.4972757 L280.538647,64.4972757" id="Stroke-303" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="70" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="66.7138338">70</tspan>
+            </text>
+            <path d="M22.7798792,41.6710939 L25.3542754,41.6710939 M283.160652,41.6710939 L280.538647,41.6710939" id="Stroke-304" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="80" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="43.8874756">80</tspan>
+            </text>
+            <path d="M22.7798792,18.892518 L25.3542754,18.892518 M283.160652,18.892518 L280.538647,18.892518" id="Stroke-305" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <text id="90" font-family="Helvetica" font-size="3.3054" font-weight="normal" fill="#000000">
+                <tspan x="14.6202778" y="21.109605">90</tspan>
+            </text>
+            <path d="M22.7798792,224.135968 L283.160652,224.135968 M22.7798792,18.892518 L283.160652,18.892518 M22.7798792,224.135968 L22.7798792,18.892518 M283.160652,224.135968 L283.160652,18.892518" id="Stroke-306" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <polyline id="Stroke-307" stroke="#000000" stroke-width="0.165" stroke-linejoin="round" points="22.7798792 219.571084 59.9358213 111.655399 97.139372 74.8418771 134.344686 53.909355 171.548237 43.3214342 208.751787 38.0759614 245.957101 32.7828827 283.160652 27.586779"></polyline>
+            <path d="M24.5396377,219.544636 C24.5396377,220.509098 23.7549758,221.293715 22.7904589,221.293715 C21.825942,221.293715 21.0412802,220.509098 21.0412802,219.544636 C21.0412802,218.580174 21.825942,217.795557 22.7904589,217.795557 C23.7549758,217.795557 24.5396377,218.580174 24.5396377,219.544636 M61.6744203,111.637767 C61.6744203,112.602229 60.8897585,113.386845 59.9252415,113.386845 C58.9607246,113.386845 58.1760628,112.602229 58.1760628,111.637767 C58.1760628,110.673305 58.9607246,109.888688 59.9252415,109.888688 C60.8897585,109.888688 61.6744203,110.673305 61.6744203,111.637767 M98.915,74.822482 C98.915,75.7869438 98.1303382,76.5715607 97.1658213,76.5715607 C96.2013043,76.5715607 95.4166425,75.7869438 95.4166425,74.822482 C95.4166425,73.8580203 96.2013043,73.0734034 97.1658213,73.0734034 C98.1303382,73.0734034 98.915,73.8580203 98.915,74.822482 M136.049783,53.8758545 C136.049783,54.8403162 135.265121,55.6249332 134.300604,55.6249332 C133.336087,55.6249332 132.551425,54.8403162 132.551425,53.8758545 C132.551425,52.9113928 133.336087,52.1267758 134.300604,52.1267758 C135.265121,52.1267758 136.049783,52.9113928 136.049783,53.8758545 M173.290362,43.2967497 C173.290362,44.2612114 172.5057,45.0458283 171.541184,45.0458283 C170.576667,45.0458283 169.792005,44.2612114 169.792005,43.2967497 C169.792005,42.3322879 170.576667,41.547671 171.541184,41.547671 C172.5057,41.547671 173.290362,42.3322879 173.290362,43.2967497 M210.530942,38.1129883 C210.530942,39.07745 209.74628,39.862067 208.781763,39.862067 C207.817246,39.862067 207.032585,39.07745 207.032585,38.1129883 C207.032585,37.1485266 207.817246,36.3639096 208.781763,36.3639096 C209.74628,36.3639096 210.530942,37.1485266 210.530942,38.1129883 M247.665725,32.8234359 C247.665725,33.7878976 246.881063,34.5725146 245.916546,34.5725146 C244.952029,34.5725146 244.167367,33.7878976 244.167367,32.8234359 C244.167367,31.8589742 244.952029,31.0743572 245.916546,31.0743572 C246.881063,31.0743572 247.665725,31.8589742 247.665725,32.8234359 M284.906304,27.5338835 C284.906304,28.4983452 284.121643,29.2829621 283.157126,29.2829621 C282.192609,29.2829621 281.407947,28.4983452 281.407947,27.5338835 C281.407947,26.5694218 282.192609,25.7848048 283.157126,25.7848048 C284.121643,25.7848048 284.906304,26.5694218 284.906304,27.5338835" id="Stroke-309" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <polyline id="Stroke-310" stroke="#000000" stroke-width="0.165" stroke-linejoin="round" points="22.7798792 224.135968 59.9358213 220.784154 97.139372 149.149509 134.344686 111.752374 171.548237 90.6259015 208.751787 75.6194413 245.957101 65.1284957 283.160652 59.2024338"></polyline>
+            <path d="M21.0307005,224.135968 L24.529058,224.135968 M22.7798792,222.386889 L22.7798792,225.885046 M58.1866425,220.784154 L61.6832367,220.784154 M59.9358213,219.036839 L59.9358213,222.533233 M95.3919565,149.149509 L98.8885507,149.149509 M97.139372,147.400431 L97.139372,150.896825 M132.595507,111.752374 L136.092101,111.752374 M134.344686,110.003295 L134.344686,113.501452 M169.799058,90.6259015 L173.297415,90.6259015 M171.548237,88.8768228 L171.548237,92.3749801 M207.004372,75.6194413 L210.500966,75.6194413 M208.751787,73.8703626 L208.751787,77.3667568 M244.207923,65.1284957 L247.704517,65.1284957 M245.957101,63.379417 L245.957101,66.8758111 M281.413237,59.2024338 L284.909831,59.2024338 M283.160652,57.4551183 L283.160652,60.9515124 M21.5649758,222.921134 L23.9947826,225.349038 M23.9947826,222.921134 L21.5649758,225.349038 M58.7209179,219.571084 L61.1489614,221.998988 M61.1489614,219.571084 L58.7209179,221.998988 M95.9262319,147.934675 L98.3542754,150.36258 M98.3542754,147.934675 L95.9262319,150.36258 M133.129783,110.53754 L135.557826,112.967208 M135.557826,110.53754 L133.129783,112.967208 M170.333333,89.4110676 L172.76314,91.8407353 M172.76314,89.4110676 L170.333333,91.8407353 M207.538647,74.4046074 L209.966691,76.832512 M209.966691,74.4046074 L207.538647,76.832512 M244.742198,63.9136618 L247.170242,66.3415663 M247.170242,63.9136618 L244.742198,66.3415663 M281.947512,57.9893631 L284.375556,60.4172676 M284.375556,57.9893631 L281.947512,60.4172676" id="Stroke-312" stroke="#000000" stroke-width="0.165" stroke-linejoin="round"></path>
+            <polyline id="Stroke-313" stroke="#000000" stroke-width="0.165" stroke-linejoin="round" points="22.7798792 224.135968 59.9358213 224.135968 97.139372 221.611088 134.344686 169.498417 171.548237 137.881 208.751787 112.480569 245.957101 96.6489385 283.160652 90.7228766"></polyline>
+            <path d="M22.7798792,226.419291 L24.529058,224.135968 L22.7798792,221.852644 L21.0307005,224.135968 L22.7798792,226.419291 Z M59.9358213,226.419291 L61.6832367,224.135968 L59.9358213,221.852644 L58.1866425,224.135968 L59.9358213,226.419291 Z M97.139372,223.892648 L98.8885507,221.611088 L97.139372,219.327764 L95.3919565,221.611088 L97.139372,223.892648 Z M134.344686,171.781741 L136.092101,169.498417 L134.344686,167.215094 L132.595507,169.498417 L134.344686,171.781741 Z M171.548237,140.164323 L173.297415,137.881 L171.548237,135.599439 L169.799058,137.881 L171.548237,140.164323 Z M208.751787,114.763892 L210.500966,112.480569 L208.751787,110.199009 L207.004372,112.480569 L208.751787,114.763892 Z M245.957101,98.9304987 L247.704517,96.6471753 L245.957101,94.365615 L244.207923,96.6471753 L245.957101,98.9304987 Z M283.160652,93.0062 L284.909831,90.7228766 L283.160652,88.4395531 L281.413237,90.7228766 L283.160652,93.0062 Z" id="Stroke-315" stroke="#000000" stroke-width="0.165"></path>
+            <polyline id="Stroke-316" stroke="#000000" stroke-width="0.165" points="22.7798792 224.135968 97.139372 224.135968 134.344686 221.221424 171.548237 180.523608 208.751787 149.197115 245.957101 128.216987 283.160652 117.482722"></polyline>
+            <path d="M20.7891304,225.301432 L24.770628,225.301432 L22.7798792,221.852644 L20.7891304,225.301432 Z M57.9450725,225.301432 L61.92657,225.301432 L59.9358213,221.852644 L57.9450725,225.301432 Z M95.1486232,225.301432 L99.1318841,225.301432 L97.139372,221.852644 L95.1486232,225.301432 Z M132.352174,222.386889 L136.335435,222.386889 L134.344686,218.939864 L132.352174,222.386889 Z M169.557488,181.689073 L173.538986,181.689073 L171.548237,178.240284 L169.557488,181.689073 Z M206.761039,150.36258 L210.7443,150.36258 L208.751787,146.913792 L206.761039,150.36258 Z M243.966353,129.382452 L247.94785,129.382452 L245.957101,125.933664 L243.966353,129.382452 Z M281.169903,118.648187 L285.153164,118.648187 L283.160652,115.201162 L281.169903,118.648187 Z" id="Stroke-318" stroke="#000000" stroke-width="0.165"></path>
+            <text id="Settlement-period-(seconds)" font-family="Helvetica" font-size="5.2886" font-weight="normal" fill="#000000">
+                <tspan x="120.072004" y="240.86578">Settlement period (seconds)</tspan>
+            </text>
+            <text id="Percentage-of-QRC-credit-lost" transform="translate(5.102990, 130.684560) rotate(-90.000000) translate(-5.102990, -130.684560) " font-family="Helvetica" font-size="5.2886" font-weight="normal" fill="#000000">
+                <tspan x="-30.0230755" y="132.68456">Percentage of QRC credit lost</tspan>
+            </text>
+            <text id="Population:-100,000," font-family="Helvetica" font-size="5.9497" font-weight="normal" fill="#000000">
+                <tspan x="97.8352881" y="11.8804886">Population: 100,000, enrollment: 100%</tspan>
+            </text>
+            <polygon id="Fill-319" fill="#FFFFFF" points="25.6945894 60.8069313 98.6452174 60.8069313 98.6452174 21.8070614 25.6945894 21.8070614"></polygon>
+            <polyline id="Stroke-320" stroke="#FFFFFF" stroke-width="0.165" points="25.6945894 60.8051682 25.6945894 21.8070614 98.6452174 21.8070614 98.6452174 60.8051682 25.6945894 60.8051682"></polyline>
+            <path d="M25.6945894,60.8051682 L98.6452174,60.8051682 M25.6945894,21.8070614 L98.6452174,21.8070614 M25.6945894,60.8051682 L25.6945894,21.8070614 M98.6452174,60.8051682 L98.6452174,21.8070614 M25.6945894,60.8051682 L98.6452174,60.8051682 M25.6945894,60.8051682 L25.6945894,21.8070614 M25.6945894,60.8051682 L98.6452174,60.8051682 M25.6945894,21.8070614 L98.6452174,21.8070614 M25.6945894,60.8051682 L25.6945894,21.8070614 M98.6452174,60.8051682 L98.6452174,21.8070614" id="Stroke-321" stroke="#000000" stroke-width="0.165"></path>
+            <text id="25K-entries" font-family="Helvetica" font-size="4.6275" font-weight="normal" fill="#000000">
+                <tspan x="48.4245676" y="29.2420765">25K entries</tspan>
+            </text>
+            <text id="50K-entries" font-family="Helvetica" font-size="4.6275" font-weight="normal" fill="#000000">
+                <tspan x="48.4245676" y="37.5034758">50K entries</tspan>
+            </text>
+            <text id="75K-entries" font-family="Helvetica" font-size="4.6275" font-weight="normal" fill="#000000">
+                <tspan x="48.4245676" y="46.8739179">75K entries</tspan>
+            </text>
+            <text id="100K-entries" font-family="Helvetica" font-size="4.6275" font-weight="normal" fill="#000000">
+                <tspan x="48.4245676" y="56.2461232">100K entries</tspan>
+            </text>
+            <path d="M30.2103623,27.3434596 L43.8581884,27.3434596 M38.8222464,27.3223014 C38.8222464,28.2867631 38.0375845,29.0713801 37.0730676,29.0713801 C36.1085507,29.0713801 35.3238889,28.2867631 35.3238889,27.3223014 C35.3238889,26.3578397 36.1085507,25.5732227 37.0730676,25.5732227 C38.0375845,25.5732227 38.8222464,26.3578397 38.8222464,27.3223014 M30.2103623,36.7165465 L43.8581884,36.7165465 M35.3115459,36.7165465 L38.8081401,36.7165465 M37.0589614,34.9674678 L37.0589614,38.4656251 M35.8458213,35.5034758 L38.2738647,37.9313803 M38.2738647,35.5034758 L35.8458213,37.9313803 M30.2103623,46.1390025 L43.8581884,46.1390025" id="Stroke-322" stroke="#000000" stroke-width="0.165"></path>
+            <polygon id="Stroke-323" stroke="#000000" stroke-width="0.165" points="37.0589614 48.4205628 38.8081401 46.1390025 37.0589614 43.855679 35.3115459 46.1390025"></polygon>
+            <line x1="30.2103623" y1="55.5120894" x2="43.8581884" y2="55.5120894" id="Stroke-325" stroke="#000000" stroke-width="0.165"></line>
+            <polygon id="Stroke-326" stroke="#000000" stroke-width="0.165" points="35.0682126 56.6775541 39.0514734 56.6775541 37.0589614 53.2287659"></polygon>
+        </g>
+        <g id="Group-3" transform="translate(377.000000, 18.000000)">
+            <g id="Group-330">
+                <mask id="mask-4" fill="white">
+                    <use xlink:href="#path-3"></use>
+                </mask>
+                <g id="Clip-329"></g>
+                <polygon id="Fill-328" fill="#FFFFFF" mask="url(#mask-4)" points="-21.0724822 253.933885 317.942504 253.933885 317.942504 0 -21.0724822 0"></polygon>
+            </g>
+            <polygon id="Fill-331" fill="#FFFFFF" points="22 226 285 226 285 19 22 19"></polygon>
+            <polyline id="Stroke-332" stroke="#FFFFFF" stroke-width="0.166" stroke-linejoin="round" points="22 226 22 19 285 19 285 226 22 226"></polyline>
+            <path d="M22,226.113438 L285,226.113438 M22,191.542822 L285,191.542822 M22,157.021854 L285,157.021854 M22,122.500887 L285,122.500887 M22,87.9302712 L285,87.9302712 M22,53.4075303 L285,53.4075303 M22,18.8865624 L285,18.8865624" id="Stroke-333" stroke="#000000" stroke-width="0.111" stroke-linejoin="round" stroke-dasharray="0.166,1.327"></path>
+            <path d="M22.8843629,226.113438 L285.115637,226.113438 M22.8843629,18.8865624 L285.115637,18.8865624 M22.8843629,226.113438 L22.8843629,18.8865624 M285.115637,226.113438 L285.115637,18.8865624 M22.8843629,226.113438 L285.115637,226.113438 M22.8843629,226.113438 L22.8843629,18.8865624 M22.8843629,226.113438 L22.8843629,223.466162 M22.8843629,18.8865624 L22.8843629,21.4859635" id="Stroke-334" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="20" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="20" y="233">20</tspan>
+            </text>
+            <path d="M56,226 L56,223.355623 M56,19 L56,21.5965552" id="Stroke-335" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="30" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="53" y="233">30</tspan>
+            </text>
+            <path d="M88,226 L88,223.355623 M88,19 L88,21.5965552" id="Stroke-336" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="40" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="85" y="233">40</tspan>
+            </text>
+            <path d="M122,226 L122,223.355623 M122,19 L122,21.5965552" id="Stroke-337" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="50" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="118" y="233">50</tspan>
+            </text>
+            <path d="M154,226 L154,223.355623 M154,19 L154,21.5965552" id="Stroke-338" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="60" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="151" y="233">60</tspan>
+            </text>
+            <path d="M187,226 L187,223.355623 M187,19 L187,21.5965552" id="Stroke-339" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="70" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="183" y="233">70</tspan>
+            </text>
+            <path d="M220,226 L220,223.355623 M220,19 L220,21.5965552" id="Stroke-340" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="80" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="217" y="233">80</tspan>
+            </text>
+            <path d="M252,226 L252,223.355623 M252,19 L252,21.5965552" id="Stroke-341" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="90" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="249" y="233">90</tspan>
+            </text>
+            <path d="M285,226 L285,223.355623 M285,19 L285,21.5965552" id="Stroke-342" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="100" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="280" y="233">100</tspan>
+            </text>
+            <path d="M22,225 L24.6005531,225 M285,225 L282.351551,225" id="Stroke-343" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="0" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="18" y="228">0</tspan>
+            </text>
+            <path d="M22,191 L24.6005531,191 M285,191 L282.351551,191" id="Stroke-344" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="10" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="15" y="194">10</tspan>
+            </text>
+            <path d="M22,157 L24.6005531,157 M285,157 L282.351551,157" id="Stroke-345" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="20" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="15" y="159">20</tspan>
+            </text>
+            <path d="M22,123 L24.6005531,123 M285,123 L282.351551,123" id="Stroke-346" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="30" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="15" y="125">30</tspan>
+            </text>
+            <path d="M22,88 L24.6005531,88 M285,88 L282.351551,88" id="Stroke-347" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="40" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="15" y="90">40</tspan>
+            </text>
+            <path d="M22,54 L24.6005531,54 M285,54 L282.351551,54" id="Stroke-348" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="50" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="15" y="56">50</tspan>
+            </text>
+            <path d="M22,19 L24.6005531,19 M285,19 L282.351551,19" id="Stroke-349" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="60" font-family="Helvetica" font-size="3.3186" font-weight="normal" fill="#000000">
+                <tspan x="15" y="22">60</tspan>
+            </text>
+            <path d="M22.8843629,226.113438 L285.115637,226.113438 M22.8843629,18.8865624 L285.115637,18.8865624 M22.8843629,226.113438 L22.8843629,18.8865624 M285.115637,226.113438 L285.115637,18.8865624" id="Stroke-350" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <polyline id="Stroke-351" stroke="#000000" stroke-width="0.166" stroke-linejoin="round" points="285 226 202.968143 96.7689146 120.984071 54 39 96.8661207"></polyline>
+            <path d="M287,225.244925 C287,226.214093 286.209287,227 285.234193,227 C284.259099,227 283.468386,226.214093 283.468386,225.244925 C283.468386,224.275757 284.259099,223.48985 285.234193,223.48985 C286.209287,223.48985 287,224.275757 287,225.244925 M204.772955,96.3632189 C204.772955,97.3323868 203.982243,98.1182939 203.007148,98.1182939 C202.032054,98.1182939 201.241341,97.3323868 201.241341,96.3632189 C201.241341,95.3940511 202.032054,94.608144 203.007148,94.608144 C203.982243,94.608144 204.772955,95.3940511 204.772955,96.3632189 M122.652285,53.7550749 C122.652285,54.7242428 121.861572,55.5101498 120.886478,55.5101498 C119.911383,55.5101498 119.120671,54.7242428 119.120671,53.7550749 C119.120671,52.785907 119.911383,52 120.886478,52 C121.861572,52 122.652285,52.785907 122.652285,53.7550749 M40.5316143,96.4689464 C40.5316143,97.4381142 39.7409015,98.2240213 38.7658072,98.2240213 C37.7907128,98.2240213 37,97.4381142 37,96.4689464 C37,95.4997785 37.7907128,94.7138714 38.7658072,94.7138714 C39.7409015,94.7138714 40.5316143,95.4997785 40.5316143,96.4689464" id="Stroke-353" stroke="#000000" stroke-width="0.166" stroke-linejoin="round"></path>
+            <text id="Percentage-enrollmen" font-family="Helvetica" font-size="9.5" font-weight="normal" fill="#000000">
+                <tspan x="106.707764" y="243">Percentage enrollment</tspan>
+            </text>
+            <text id="Percentage-of-unprocessed-receipts" transform="translate(6.000000, 123.000000) rotate(-90.000000) translate(-6.000000, -123.000000) " font-family="Helvetica" font-size="9.5" font-weight="normal" fill="#000000">
+                <tspan x="-70.0463867" y="126.5">Percentage of unprocessed receipts</tspan>
+            </text>
+            <text id="Population:-500,000" font-family="Helvetica" font-size="10.5" font-weight="normal" fill="#000000">
+                <tspan x="106.793457" y="13">Population: 500,000</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

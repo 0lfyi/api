@@ -1,0 +1,19 @@
+stages:
+  - build
+
+build:
+  stage: build
+  image: docker:20.10.17
+  services:
+    - docker:20.10.17-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build
+      --build-arg CI_COMMIT_SHA="$CI_COMMIT_SHA"
+      --file ./Dockerfile
+      --tag $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

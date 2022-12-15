@@ -1,0 +1,205 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Version {
+  version                 BigInt
+  accumulatorRootHash     Bytes
+  timestamp               BigInt
+  chainId                 Int
+  scriptHashAllowList     Bytes[]
+  modulePublishingAllowed Boolean?
+  diemVersion             BigInt?
+  dualAttestationLimit    BigInt?
+
+  @@unique([version, accumulatorRootHash, chainId, timestamp])
+}
+
+model Currency {
+  code                        String @id
+  fractionalPart              BigInt
+  scalingFactor               BigInt
+  mintEventsKey               String
+  burnEventsKey               String
+  preburnEventsKey            String
+  cancelBurnEventsKey         String
+  exchangeRateUpdateEventsKey String
+}
+
+enum VMStatus {
+  Executed
+  OutOfGas
+  MoveAbort
+  ExecutionFailure
+  MiscellaneousError
+  VerificationError
+  DeserializationError
+  PublishingFailure
+  Unknown
+}
+
+enum TransactionType {
+  BlockMetadata
+  User
+  WriteSet
+  Unknown
+}
+
+model Transaction {
+  hash     Bytes           @id
+  version  BigInt
+  bytes    Bytes
+  gasUsed  BigInt
+  vmStatus VMStatus
+  type     TransactionType
+}
+
+model UserTransaction {
+  hash                      Bytes   @id
+  sender                    Bytes
+  signatureScheme           String
+  signature                 Bytes
+  publicKey                 Bytes
+  secondarySigners          Bytes[]
+  secondarySignatureSchemes Bytes[]
+  secondarySignatures       Bytes[]
+  secondaryPublicKeys       Bytes[]
+  sequenceNumber            BigInt
+  chainId                   Int
+  maxGasAmount              BigInt
+  gasUnitPrice              BigInt
+  gasCurrency               String
+  expirationTimestampSecs   BigInt
+  scriptHash                Bytes
+  scriptBytes               Bytes
+  script                    Json
+}
+
+model BlockMetadataTransaction {
+  hash           Bytes  @id
+  timestampUsecs BigInt
+}
+
+enum EventType {
+  Burn
+  CancelBurn
+  Mint
+  ToXDXExchangeRateUpdate
+  Preburn
+  ReceivedPayment
+  SentPayment
+  AdminTransaction
+  NewEpoch
+  NewBlock
+  ReceivedMint
+  ComplianceKeyRotation
+  BaseUrlRotation
+  CreateAccount
+  DiemIdDomain
+  Unknown
+}
+
+model Event {
+  key                Bytes
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  type               EventType
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model NewBlockEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  round              BigInt
+  proposer           Bytes
+  proposedTime       BigInt
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model SentPaymentEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  amount             BigInt
+  currency           String
+  receiver           Bytes
+  sender             Bytes
+  metadata           Bytes
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model ReceivedPaymentEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  amount             BigInt
+  currency           String
+  receiver           Bytes
+  sender             Bytes
+  metadata           Bytes
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model CreateAccountEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  createdAddress     Bytes
+  roleId             BigInt
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model MintEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  amount             BigInt
+  currency           String
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model BurnEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  amount             BigInt
+  currency           String
+  preburnAddress     Bytes
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+model NewEpochEvent {
+  transactionVersion BigInt
+  sequenceNumber     BigInt
+  epoch              BigInt
+
+  @@unique([transactionVersion, sequenceNumber])
+}
+
+enum AccountRole {
+  ChildVASP
+  ParentVASP
+  DesignatedDealer
+  TreasuryCompliance
+  Unknown
+}
+
+model Account {
+  address                        Bytes       @id
+  sequenceNumber                 BigInt
+  authenticationKey              Bytes
+  sentEventsKey                  Bytes
+  receivedEventsKey              Bytes
+  delegatedKeyRotationCapability Boolean
+  delegatedWithdrawalCapability  Boolean
+  isFrozen                       Boolean
+  role                           AccountRole
+  version                        BigInt
+}
