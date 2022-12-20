@@ -1,5 +1,5 @@
-import BN from "bn.js";
-import prisma from "../../../../services/prisma.js";
+import BN from 'bn.js';
+import prisma from '../../../../services/prisma.js';
 
 const transactions = async (
   version: any,
@@ -10,7 +10,7 @@ const transactions = async (
   const transactions = await prisma.transaction.findMany({
     where: {
       version: parseInt(version.version, 10),
-    }
+    },
   });
   return transactions.map((transaction) => ({
     version: transaction.version,

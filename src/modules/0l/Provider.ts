@@ -1,4 +1,4 @@
-import type { AccountView, TransactionView } from "./types.js";
+import type { AccountView, TransactionView } from './types.js';
 
 interface JSONRpcResponse<R> {
   jsonrpc: string;
@@ -38,7 +38,7 @@ interface CurrencyInfo {
 
 interface RawMetadata {
   version: number;
-  accumulator_root_hash: string
+  accumulator_root_hash: string;
   timestamp: number;
   chain_id: number;
   script_hash_allow_list: string[] | null;
@@ -49,7 +49,7 @@ interface RawMetadata {
 
 interface Metadata {
   version: number;
-  accumulatorRootHash: Buffer
+  accumulatorRootHash: Buffer;
   timestamp: number;
   chainId: number;
   scriptHashAllowList?: Buffer[];
@@ -64,16 +64,16 @@ interface ScriptView {
 }
 
 interface TransactionDataView_BlockMetadata {
-  type: "blockmetadata",
+  type: 'blockmetadata';
   timestamp_usecs: number;
 }
 
 interface TransactionDataView_WriteSet {
-  type: "writeset"
+  type: 'writeset';
 }
 
 interface TransactionDataView_User {
-  type: "user",
+  type: 'user';
   sender: string;
   signature_scheme: string;
   signature: string;
@@ -90,12 +90,10 @@ interface TransactionDataView_User {
   expiration_timestamp_secs: number;
   script_hash: string;
   script_bytes: string;
-      script: [Object]
+  script: [Object];
 }
 
-type TransactionDataView = |
-  TransactionDataView_BlockMetadata |
-  TransactionDataView_WriteSet;
+type TransactionDataView = TransactionDataView_BlockMetadata | TransactionDataView_WriteSet;
 
 interface RawTransaction {
   version: number;
@@ -111,7 +109,7 @@ class Provider {
   }
 
   public async getCurrencies(): Promise<CurrencyInfo[]> {
-    const res = await this.invoke<RawCurrencyInfo[]>("get_currencies", []);
+    const res = await this.invoke<RawCurrencyInfo[]>('get_currencies', []);
 
     return res.result.map((info) => ({
       code: info.code,
@@ -128,7 +126,7 @@ class Provider {
 
   public async getMetadata(version?: number): Promise<Metadata | undefined> {
     const params = version === undefined ? [] : [version];
-    const res = await this.invoke<RawMetadata>("get_metadata", params);
+    const res = await this.invoke<RawMetadata>('get_metadata', params);
 
     const rawMetadata = res.result;
     if (!rawMetadata) {
@@ -140,39 +138,66 @@ class Provider {
       accumulatorRootHash: Buffer.from(rawMetadata.accumulator_root_hash, 'hex'),
       timestamp: rawMetadata.timestamp,
       chainId: rawMetadata.chain_id,
-      scriptHashAllowList: rawMetadata.script_hash_allow_list ? rawMetadata.script_hash_allow_list.map((it) => Buffer.from(it, 'hex')) : undefined,
-      modulePublishingAllowed: rawMetadata.module_publishing_allowed !== null ? rawMetadata.module_publishing_allowed : undefined,
+      scriptHashAllowList: rawMetadata.script_hash_allow_list
+        ? rawMetadata.script_hash_allow_list.map((it) => Buffer.from(it, 'hex'))
+        : undefined,
+      modulePublishingAllowed:
+        rawMetadata.module_publishing_allowed !== null
+          ? rawMetadata.module_publishing_allowed
+          : undefined,
       diemVersion: rawMetadata.diem_version !== null ? rawMetadata.diem_version : undefined,
-      dualAttestationLimit: rawMetadata.dual_attestation_limit !== null ? rawMetadata.dual_attestation_limit : undefined,
+      dualAttestationLimit:
+        rawMetadata.dual_attestation_limit !== null
+          ? rawMetadata.dual_attestation_limit
+          : undefined,
     };
   }
 
   public async getAccount(address: string, version?: number): Promise<AccountView> {
-    const res = await this.invoke<AccountView>("get_account", version === undefined ? [address] : [address, version]);
+    const res = await this.invoke<AccountView>(
+      'get_account',
+      version === undefined ? [address] : [address, version]
+    );
     return res.result;
   }
 
-  public async getTransactions(startVersion: number, limit: number, includeEvents: boolean): Promise<TransactionView[]> {
-    const res = await this.invoke<TransactionView[]>("get_transactions", [startVersion, limit, includeEvents]);
+  public async getTransactions(
+    startVersion: number,
+    limit: number,
+    includeEvents: boolean
+  ): Promise<TransactionView[]> {
+    const res = await this.invoke<TransactionView[]>('get_transactions', [
+      startVersion,
+      limit,
+      includeEvents,
+    ]);
     return res.result;
   }
 
-  public async getTransactionsWithProofs(startVersion: number, limit: number, includeEvents: boolean): Promise<any[]> {
-    const res = await this.invoke<any[]>("get_transactions_with_proofs", [startVersion, limit, includeEvents]);
+  public async getTransactionsWithProofs(
+    startVersion: number,
+    limit: number,
+    includeEvents: boolean
+  ): Promise<any[]> {
+    const res = await this.invoke<any[]>('get_transactions_with_proofs', [
+      startVersion,
+      limit,
+      includeEvents,
+    ]);
     return res.result;
   }
 
   public async invoke<R>(method: string, params: unknown[]): Promise<DiemRpcResponse<R>> {
     const res = await fetch(this.url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        jsonrpc: "2.0",
+        jsonrpc: '2.0',
         method,
         params,
-        id: 1
+        id: 1,
       }),
     });
     return await res.json();

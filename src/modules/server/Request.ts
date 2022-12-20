@@ -1,6 +1,5 @@
 import { Request as ExpressRequest } from 'express';
 
-interface Request extends ExpressRequest {
-}
+type Request = ExpressRequest;
 
 export default Request;

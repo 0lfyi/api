@@ -1,13 +1,13 @@
 interface TransactionDataView_User {
   type: 'user';
   sender: string;
-  signature_scheme: string,
-  signature: string,
-  public_key: string,
+  signature_scheme: string;
+  signature: string;
+  public_key: string;
   secondary_signers?: string[];
   secondary_signature_schemes?: string[];
   secondary_signatures?: string[];
-  secondary_public_keys?: string[]; 
+  secondary_public_keys?: string[];
   sequence_number: number;
   chain_id: number;
   max_gas_amount: number;
@@ -28,7 +28,7 @@ interface TransactionDataView_WriteSet {
   type: 'writeset';
 }
 
-interface TransactionDataView_Unknown{
+interface TransactionDataView_Unknown {
   type: 'unknown';
 }
 
@@ -48,36 +48,36 @@ interface VMStatusView_OutOfGas {
 
 interface VMStatusView_MoveAbort {
   type: 'move_abort';
-  location: string,
-  abort_code: number,
-  //explanation: Option<MoveAbortExplanationView>,
-};
+  location: string;
+  abort_code: number;
+  // explanation: Option<MoveAbortExplanationView>,
+}
 
 interface VMStatusView_ExecutionFailure {
   type: 'execution_failure';
   location: string;
   function_index: number;
   code_offset: number;
-};
+}
 
 interface VMStatusView_MiscellaneousError {
-  type: 'miscellaneous_error'
+  type: 'miscellaneous_error';
 }
 
 interface VMStatusView_VerificationError {
-  type: 'verification_error',
+  type: 'verification_error';
 }
 
 interface VMStatusView_DeserializationError {
-  type: 'deserialization_error',
+  type: 'deserialization_error';
 }
 
 interface VMStatusView_PublishingFailure {
-  type: 'publishing_failure',
+  type: 'publishing_failure';
 }
 
 interface VMStatusView_Unknown {
-  type: 'unknown'
+  type: 'unknown';
 }
 
 type VMStatusView =
@@ -107,92 +107,92 @@ interface AmountView {
 }
 
 interface EventDataView_Burn {
-  type: "burn";
+  type: 'burn';
   amount: AmountView;
   preburn_address: string;
 }
 
 interface EventDataView_CancelBurn {
-  type: "cancelburn";
+  type: 'cancelburn';
   // amount: AmountView,
   // preburn_address: AccountAddress,
 }
 
 interface EventDataView_Mint {
-  type: "mint";
-  amount: AmountView
+  type: 'mint';
+  amount: AmountView;
 }
 
 interface EventDataView_ToXDXExchangeRateUpdate {
-  type: "to_xdx_exchange_rate_update";
+  type: 'to_xdx_exchange_rate_update';
   // currency_code: String,
   // new_to_xdx_exchange_rate: f32,
 }
 
 interface EventDataView_Preburn {
-  type: "preburn";
+  type: 'preburn';
   // amount: AmountView,
   // preburn_address: AccountAddress,
 }
 
 interface EventDataView_ReceivedPayment {
-  type: "receivedpayment";
-  amount: AmountView,
+  type: 'receivedpayment';
+  amount: AmountView;
   receiver: string;
   sender: string;
   metadata: string;
 }
 
 interface EventDataView_SentPayment {
-  type: "sentpayment";
-  amount: AmountView,
+  type: 'sentpayment';
+  amount: AmountView;
   receiver: string;
   sender: string;
   metadata: string;
 }
 
 interface EventDataView_AdminTransaction {
-  type: "admintransaction";
+  type: 'admintransaction';
   // committed_timestamp_secs: u64
 }
 
 interface EventDataView_NewEpoch {
-  type: "newepoch";
+  type: 'newepoch';
   epoch: number;
 }
 
 interface EventDataView_NewBlock {
-  type: "newblock";
+  type: 'newblock';
   round: number;
   proposer: string;
   proposed_time: number;
 }
 
 interface EventDataView_ReceivedMint {
-  type: "receivedmint";
+  type: 'receivedmint';
   // amount: AmountView,
   // destination_address: AccountAddress,
 }
 
 interface EventDataView_ComplianceKeyRotation {
-  type: "compliancekeyrotation";
+  type: 'compliancekeyrotation';
   // time_rotated_seconds: u64,
 }
 
 interface EventDataView_BaseUrlRotation {
-  type: "baseurlrotation";
+  type: 'baseurlrotation';
   // new_base_url: String,
   // time_rotated_seconds: u64,
 }
 
 interface EventDataView_CreateAccount {
-  type: "createaccount";
+  type: 'createaccount';
   created_address: string;
   role_id: number;
 }
 
 interface EventDataView_DiemIdDomain {
-  type: "diemiddomain";
+  type: 'diemiddomain';
 
   // Whether a domain was added or removed
   // removed: bool,
@@ -205,11 +205,11 @@ interface EventDataView_DiemIdDomain {
 }
 
 interface EventDataView_Unknown {
-  type: "unknown";
+  type: 'unknown';
   // bytes: Option<BytesView>;
 }
 
-type EventDataView = 
+type EventDataView =
   | EventDataView_Burn
   | EventDataView_CancelBurn
   | EventDataView_Mint
@@ -277,7 +277,7 @@ type AccountRoleView =
   | AccountRoleView_ParentVASP
   | AccountRoleView_DesignatedDealer
   | AccountRoleView_TreasuryCompliance
-  | AccountRoleView_Unknown; 
+  | AccountRoleView_Unknown;
 
 export interface AccountView {
   address: string;

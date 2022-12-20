@@ -9,8 +9,8 @@ interface Args {
 const accountQuery: IFieldResolver<any, {}, Args> = async (source, args, context) => {
   const account = await prisma.account.findFirst({
     where: {
-      address: Buffer.from(args.address, 'hex')
-    }
+      address: Buffer.from(args.address, 'hex'),
+    },
   });
 
   if (account) {

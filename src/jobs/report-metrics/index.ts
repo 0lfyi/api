@@ -1,6 +1,6 @@
 import { Gauge } from 'prom-client';
-import prisma from "../../services/prisma.js";
-import { registry } from "../../services/prometheus.js";
+import prisma from '../../services/prisma.js';
+import { registry } from '../../services/prometheus.js';
 
 const gauge = new Gauge({
   name: 'versions_count',

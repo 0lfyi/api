@@ -1,19 +1,19 @@
-/* eslint-disable global-require */
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import { promises as fs } from 'fs';
 import { assert } from '@sindresorhus/is';
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 
+type Role = 'api' | 'blockchain-watcher' | 'jobs-runner' | 'vitals-watcher';
+
 const config = {
   instanceId: uuidv4(),
   providerUrl: '',
+  vitalsUrl: '',
   app: {
     env: '',
     name: '',
     version: '',
-    roles: [] as string[],
+    roles: [] as Role[],
   },
   webApp: {
     protocol: '',
@@ -25,6 +25,12 @@ const config = {
   missingVersionsManager: {
     batchSize: 10,
     syncFrom: 'beginning' as 'beginning' | 'end',
+  },
+  influxdb: {
+    org: '',
+    bucket: '',
+    host: '',
+    token: '',
   },
 };
 
@@ -41,9 +47,11 @@ export const loadConfig = async (): Promise<typeof config> => {
 
   assert.string(ENV.ROLES);
   assert.string(ENV.PROVIDER_URL);
+  assert.string(ENV.VITALS_URL);
 
   Object.assign(config, {
     providerUrl: ENV.PROVIDER_URL,
+    vitalsUrl: ENV.VITALS_URL,
     app: {
       env: ENV.ENVIRONMENT,
       name: pkg.name,
@@ -54,9 +62,19 @@ export const loadConfig = async (): Promise<typeof config> => {
       port: ENV.PORT,
     },
     missingVersionsManager: {
-      batchSize: process.env.MISSING_VERSIONS_MANAGER_BATCH_SIZE ? parseInt(process.env.MISSING_VERSIONS_MANAGER_BATCH_SIZE, 10) : 10,
-      syncFrom: process.env.MISSING_VERSIONS_MANAGER_SYNC_FROM ? process.env.MISSING_VERSIONS_MANAGER_SYNC_FROM : 'end',
-    }
+      batchSize: process.env.MISSING_VERSIONS_MANAGER_BATCH_SIZE
+        ? parseInt(process.env.MISSING_VERSIONS_MANAGER_BATCH_SIZE, 10)
+        : 10,
+      syncFrom: process.env.MISSING_VERSIONS_MANAGER_SYNC_FROM
+        ? process.env.MISSING_VERSIONS_MANAGER_SYNC_FROM
+        : 'end',
+    },
+    influxdb: {
+      org: ENV.INFLUXDB_ORG,
+      bucket: ENV.INFLUXDB_BUCKET,
+      host: ENV.INFLUXDB_HOST,
+      token: ENV.INFLUXDB_TOKEN,
+    },
   });
 
   return config;

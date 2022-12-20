@@ -3,8 +3,8 @@ import Server from './modules/server/index.js';
 import config from './config.js';
 import logger from './logger.js';
 import BlockchainWatcher from './modules/blockchain-watcher/BlockchainWatcher.js';
-import BlockProcessor from './modules/block-processor/BlockProcessor.js';
 import reportMetrics from './jobs/report-metrics/index.js';
+import VitalsWatcher from './modules/vitals-watcher/VitalsWatcher.js';
 
 const schedule = (name: string, cronRule: string, handler: () => Promise<void>) => {
   const job = nodeSchedule.scheduleJob(cronRule, () => {
@@ -40,8 +40,8 @@ export const listen = async (): Promise<void> => {
     await BlockchainWatcher.create();
   }
 
-  if (config.app.roles.includes('block-processor')) {
-    await BlockProcessor.create();
+  if (config.app.roles.includes('vitals-watcher')) {
+    await VitalsWatcher.create();
   }
 
   if (config.app.roles.includes('jobs-runner')) {

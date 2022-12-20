@@ -1,8 +1,9 @@
-import _ from "lodash";
-import prisma from "../../services/prisma.js";
+import _ from 'lodash';
+import Bluebird from 'bluebird';
+import prisma from '../../services/prisma.js';
 import rootLogger from '../../logger.js';
-import BlockchainWatcher from "./BlockchainWatcher.js";
-import config from "../../config.js";
+import BlockchainWatcher from './BlockchainWatcher.js';
+import config from '../../config.js';
 
 const rangeSize = (inf: number, sup: number) => sup - inf;
 
@@ -11,7 +12,9 @@ class MissingVersionsManager {
 
   private blockchainWatcher: BlockchainWatcher;
 
-  public static async create(blockchainWatcher: BlockchainWatcher): Promise<MissingVersionsManager> {
+  public static async create(
+    blockchainWatcher: BlockchainWatcher
+  ): Promise<MissingVersionsManager> {
     const missingVersionsManager = new MissingVersionsManager(blockchainWatcher);
     await missingVersionsManager.init();
     return missingVersionsManager;
@@ -22,6 +25,17 @@ class MissingVersionsManager {
   }
 
   private async init() {
+    for (;;) {
+      try {
+        await this.tick();
+      } catch (err) {
+        console.error(err);
+      }
+      await Bluebird.delay(10_000);
+    }
+  }
+
+  private async tick() {
     const total = await this.getTotal();
 
     if (total === 0) {
@@ -55,7 +69,6 @@ class MissingVersionsManager {
     const size = rangeSize(low, high);
 
     if (size > config.missingVersionsManager.batchSize) {
-
       const half = Math.ceil(size / 2);
 
       if (config.missingVersionsManager.syncFrom === 'end') {
@@ -65,7 +78,6 @@ class MissingVersionsManager {
         await this.processRange(low, low + half);
         await this.processRange(low + half + 1, high);
       }
-
     } else {
       await this.getMissingVersions(low, high);
     }
@@ -87,14 +99,14 @@ class MissingVersionsManager {
           {
             version: {
               gte: low,
-            }
+            },
           },
           {
             version: {
               lte: high,
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       orderBy: {
         version: 'asc',
@@ -114,10 +126,9 @@ class MissingVersionsManager {
 
     for (let i = 0; i < length; ++i) {
       const it = missing[i];
-      promises[i] = this.blockchainWatcher.syncVersion(it)
-        .catch((err) => {
-          this.logger.error(`Error syncing version ${it}: ${err.message}`);
-        });
+      promises[i] = this.blockchainWatcher.syncVersion(it).catch((err) => {
+        this.logger.error(`Error syncing version ${it}: ${err.message}`);
+      });
     }
   }
 
@@ -139,10 +150,10 @@ class MissingVersionsManager {
           {
             version: {
               lte: max,
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     });
 
     return expected - total;
@@ -153,7 +164,7 @@ class MissingVersionsManager {
       take: 1,
       orderBy: {
         version: 'desc',
-      }
+      },
     });
     if (version) {
       return Number(version.version);

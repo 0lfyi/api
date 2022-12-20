@@ -4,7 +4,7 @@ import prisma from '../../../services/prisma.js';
 
 interface Args {
   start?: number;
-  limit?: number
+  limit?: number;
 }
 
 const versionsQuery: IFieldResolver<any, {}, Args> = async (source, args, context) => {

@@ -16,8 +16,8 @@ const searchQuery: IFieldResolver<any, {}, Args> = async (source, args, context)
   if (ADDRESS.test(query)) {
     const account = await prisma.account.findFirst({
       where: {
-        address: Buffer.from(args.query, 'hex')
-      }
+        address: Buffer.from(args.query, 'hex'),
+      },
     });
 
     if (account) {
@@ -35,7 +35,7 @@ const searchQuery: IFieldResolver<any, {}, Args> = async (source, args, context)
     const version = await prisma.version.findFirst({
       where: {
         version: parseInt(query, 10),
-      }
+      },
     });
 
     if (version) {

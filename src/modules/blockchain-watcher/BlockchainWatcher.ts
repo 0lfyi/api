@@ -1,9 +1,9 @@
-import _ from "lodash";
-import prisma from "../../services/prisma.js";
+import _ from 'lodash';
+import prisma from '../../services/prisma.js';
 import rootLogger from '../../logger.js';
-import Provider from "../0l/Provider.js";
-import MissingVersionsManager from "./MissingVersionsManager.js";
-import config from "../../config.js";
+import Provider from '../0l/Provider.js';
+import MissingVersionsManager from './MissingVersionsManager.js';
+import config from '../../config.js';
 
 const getAccountRoleType = (type: string): string | undefined => {
   const types = new Map([
@@ -40,7 +40,6 @@ const getTransactionType = (type: string): string | undefined => {
   ]);
   return types.get(type);
 };
-
 
 const getEventType = (type: string): string | undefined => {
   const types = new Map([
@@ -104,7 +103,6 @@ class BlockchainWatcher {
     //   await this.syncAccount(address);
     // }
 
-
     // await this.syncTransactions(82571788);
 
     // await this.syncCurrencies();
@@ -115,7 +113,7 @@ class BlockchainWatcher {
       take: 1,
       orderBy: {
         version: 'desc',
-      }
+      },
     });
     if (version) {
       return Number(version.version);
@@ -127,13 +125,12 @@ class BlockchainWatcher {
     let low = 1;
     let high = from;
 
-
     while (low < high) {
-      const mid = low + high >>> 1;
+      const mid = (low + high) >>> 1;
       console.log(low, high, mid);
       const tx = await this.provider.getTransactions(mid, 1, false);
       if (!tx) {
-        low = mid + 1
+        low = mid + 1;
       } else {
         high = mid;
       }
@@ -179,18 +176,13 @@ class BlockchainWatcher {
   }
 
   public async syncTransactions(version: number) {
-    const transactions = await this.provider.getTransactions(
-      version,
-      1,
-      true
-    );
+    const transactions = await this.provider.getTransactions(version, 1, true);
 
     for (const transaction of transactions) {
       if (transaction.events) {
         for (const event of transaction.events) {
-
           switch (event.data.type) {
-            case "newblock":
+            case 'newblock':
               await prisma.$executeRaw`
                 INSERT INTO "NewBlockEvent"
                   (
@@ -212,7 +204,7 @@ class BlockchainWatcher {
               `;
               break;
 
-            case "receivedpayment":
+            case 'receivedpayment':
               await prisma.$executeRaw`
                 INSERT INTO "ReceivedPaymentEvent"
                   (
@@ -238,7 +230,7 @@ class BlockchainWatcher {
               `;
               break;
 
-            case "sentpayment":
+            case 'sentpayment':
               await prisma.$executeRaw`
                 INSERT INTO "SentPaymentEvent"
                   (
@@ -264,7 +256,7 @@ class BlockchainWatcher {
               `;
               break;
 
-            case "createaccount":
+            case 'createaccount':
               await prisma.$executeRaw`
                 INSERT INTO "CreateAccountEvent"
                   (
@@ -285,7 +277,7 @@ class BlockchainWatcher {
               await this.syncAccount(event.data.created_address);
               break;
 
-            case "mint":
+            case 'mint':
               await prisma.$executeRaw`
                 INSERT INTO "MintEvent"
                   (
@@ -304,8 +296,8 @@ class BlockchainWatcher {
                 ON CONFLICT DO NOTHING
               `;
               break;
-            
-            case "burn":
+
+            case 'burn':
               await prisma.$executeRaw`
                 INSERT INTO "BurnEvent"
                   (
@@ -327,7 +319,7 @@ class BlockchainWatcher {
               `;
               break;
 
-            case "newepoch":
+            case 'newepoch':
               await prisma.$executeRaw`
                 INSERT INTO "NewEpochEvent"
                   (
@@ -420,7 +412,9 @@ class BlockchainWatcher {
                 ${Buffer.from(transaction.transaction.public_key, 'hex')},
                 ${
                   transaction.transaction.secondary_signers
-                    ? transaction.transaction.secondary_signers.map((signer) => Buffer.from(signer, 'hex'))
+                    ? transaction.transaction.secondary_signers.map((signer) =>
+                        Buffer.from(signer, 'hex')
+                      )
                     : []
                 },
                 ${
@@ -430,12 +424,16 @@ class BlockchainWatcher {
                 },
                 ${
                   transaction.transaction.secondary_signatures
-                    ? transaction.transaction.secondary_signatures.map((signature) => Buffer.from(signature, 'hex'))
+                    ? transaction.transaction.secondary_signatures.map((signature) =>
+                        Buffer.from(signature, 'hex')
+                      )
                     : []
                 },
                 ${
                   transaction.transaction.secondary_public_keys
-                    ? transaction.transaction.secondary_public_keys.map((publicKey) => Buffer.from(publicKey, 'hex'))
+                    ? transaction.transaction.secondary_public_keys.map((publicKey) =>
+                        Buffer.from(publicKey, 'hex')
+                      )
                     : []
                 },
                 ${transaction.transaction.sequence_number},
@@ -509,7 +507,11 @@ class BlockchainWatcher {
         ${metadata.accumulatorRootHash},
         ${metadata.timestamp},
         ${metadata.chainId},
-        ${metadata.scriptHashAllowList ? metadata.scriptHashAllowList.map((it) => `\\x${it.toString('hex')}`) : undefined},
+        ${
+          metadata.scriptHashAllowList
+            ? metadata.scriptHashAllowList.map((it) => `\\x${it.toString('hex')}`)
+            : undefined
+        },
         ${metadata.modulePublishingAllowed},
         ${metadata.diemVersion},
         ${metadata.dualAttestationLimit}
@@ -521,7 +523,7 @@ class BlockchainWatcher {
   private async syncCurrencies() {
     const currencies = await this.provider.getCurrencies();
 
-    const length = currencies.length;
+    const { length } = currencies;
 
     const query = `
       INSERT INTO "Currency"
@@ -537,16 +539,17 @@ class BlockchainWatcher {
         )
       VALUES ${_.map(
         new Array(currencies.length),
-        (__, it) => `(${[
-          `$${it + 1}`,
-          `$${it + 2}`,
-          `$${it + 3}`,
-          `$${it + 4}`,
-          `$${it + 5}`,
-          `$${it + 6}`,
-          `$${it + 7}`,
-          `$${it + 8}`,
-        ].join()})`
+        (__, it) =>
+          `(${[
+            `$${it + 1}`,
+            `$${it + 2}`,
+            `$${it + 3}`,
+            `$${it + 4}`,
+            `$${it + 5}`,
+            `$${it + 6}`,
+            `$${it + 7}`,
+            `$${it + 8}`,
+          ].join()})`
       ).join()}
       ON CONFLICT DO NOTHING
     `;

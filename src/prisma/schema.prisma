@@ -106,6 +106,7 @@ enum EventType {
 
 model Event {
   key                Bytes
+  transactionHash    Bytes?
   transactionVersion BigInt
   sequenceNumber     BigInt
   type               EventType
@@ -115,6 +116,7 @@ model Event {
 
 model NewBlockEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   round              BigInt
   proposer           Bytes
@@ -125,6 +127,7 @@ model NewBlockEvent {
 
 model SentPaymentEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
@@ -137,6 +140,7 @@ model SentPaymentEvent {
 
 model ReceivedPaymentEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
@@ -149,6 +153,7 @@ model ReceivedPaymentEvent {
 
 model CreateAccountEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   createdAddress     Bytes
   roleId             BigInt
@@ -158,6 +163,7 @@ model CreateAccountEvent {
 
 model MintEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
@@ -167,6 +173,7 @@ model MintEvent {
 
 model BurnEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
@@ -177,6 +184,7 @@ model BurnEvent {
 
 model NewEpochEvent {
   transactionVersion BigInt
+  transactionHash    Bytes?
   sequenceNumber     BigInt
   epoch              BigInt
 

@@ -1,6 +1,6 @@
-import Bluebird from "bluebird";
-import BN from "bn.js";
-import prisma from "../../../../services/prisma.js";
+import Bluebird from 'bluebird';
+import BN from 'bn.js';
+import prisma from '../../../../services/prisma.js';
 
 const events = async (
   transaction: any,
@@ -8,13 +8,11 @@ const events = async (
   context: any,
   ...others: any[]
 ): Promise<any[]> => {
-  const {
-    newBlockEvents,
-  } = await Bluebird.props({
+  const { newBlockEvents } = await Bluebird.props({
     newBlockEvents: prisma.newBlockEvent.findMany({
       where: {
         transactionVersion: transaction.version,
-      }
+      },
     }),
   });
 

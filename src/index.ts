@@ -22,7 +22,6 @@ const main = async (): Promise<void> => {
     throw new Error(`Invalid timezone offset: ${timezoneOffset}. Must be 0.`);
   }
 
-  // eslint-disable-next-line global-require
   await import('./main.js');
 };
 

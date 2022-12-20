@@ -10,7 +10,7 @@ const versionQuery: IFieldResolver<any, {}, Args> = async (source, args, context
   const version = await prisma.version.findFirst({
     where: {
       version: args.version,
-    }
+    },
   });
 
   if (version) {

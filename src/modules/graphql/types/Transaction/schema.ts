@@ -1,4 +1,4 @@
-import { parse } from "graphql";
+import { parse } from 'graphql';
 
 export default parse(`
   enum VMStatus {

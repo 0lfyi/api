@@ -11,6 +11,7 @@ import {
   PluginDefinition,
 } from 'apollo-server-core';
 
+import is from '@sindresorhus/is';
 import Mutation from './mutations/index.js';
 import Query from './queries/index.js';
 
@@ -19,7 +20,6 @@ import types from './types/index.js';
 import scalars from './scalars/index.js';
 
 import schema from './schema.js';
-import is from '@sindresorhus/is';
 
 // import DataSource from './DataSource';
 
@@ -35,7 +35,7 @@ const getServer = async (
     Event: {
       __resolveType(obj: any, context: any, info: any) {
         return obj.__type;
-      }
+      },
     },
 
     SearchResult: {
@@ -47,12 +47,12 @@ const getServer = async (
         // if(obj.name){
         //   return 'Author';
         // }
-  
+
         // // Only Book has a title field
         // if(obj.title){
         //   return 'Book';
         // }
-  
+
         return null; // GraphQLError is thrown
       },
     },
