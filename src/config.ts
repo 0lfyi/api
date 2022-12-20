@@ -9,6 +9,9 @@ const config = {
   instanceId: uuidv4(),
   providerUrl: '',
   vitalsUrl: '',
+  maxmind: {
+    dbPath: '',
+  },
   app: {
     env: '',
     name: '',
@@ -46,12 +49,13 @@ export const loadConfig = async (): Promise<typeof config> => {
   }
 
   assert.string(ENV.ROLES);
-  assert.string(ENV.PROVIDER_URL);
-  assert.string(ENV.VITALS_URL);
 
   Object.assign(config, {
     providerUrl: ENV.PROVIDER_URL,
     vitalsUrl: ENV.VITALS_URL,
+    maxmind: {
+      dbPath: ENV.MAXMIND_DB_PATH,
+    },
     app: {
       env: ENV.ENVIRONMENT,
       name: pkg.name,

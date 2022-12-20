@@ -78,103 +78,6 @@ class BlockchainWatcher {
     return blockchainWatcher;
   }
 
-  private async init() {
-    await this.syncVersion();
-
-    // await this.syncAccount('d0383924341821f9e43a6cff46f0a74e');
-
-    setInterval(() => {
-      this.syncVersion().catch((err) => {
-        console.log(err);
-      });
-    }, 5_000);
-
-    const missingVersionsManager = await MissingVersionsManager.create(this);
-
-    // console.log('fetching....');
-    // const accounts: { sender: Buffer }[] = await prisma.$queryRaw`
-    //   SELECT DISTINCT "sender" FROM "ReceivedPaymentEvent"
-    // `;
-    // console.log('done', accounts.length);
-
-    // for (const account of accounts) {
-    //   const address = account.sender.toString('hex')
-    //   console.log(address);
-    //   await this.syncAccount(address);
-    // }
-
-    // await this.syncTransactions(82571788);
-
-    // await this.syncCurrencies();
-  }
-
-  private async getMax(): Promise<number | undefined> {
-    const version = await prisma.version.findFirst({
-      take: 1,
-      orderBy: {
-        version: 'desc',
-      },
-    });
-    if (version) {
-      return Number(version.version);
-    }
-    return undefined;
-  }
-
-  private async findMin(from: number): Promise<number> {
-    let low = 1;
-    let high = from;
-
-    while (low < high) {
-      const mid = (low + high) >>> 1;
-      console.log(low, high, mid);
-      const tx = await this.provider.getTransactions(mid, 1, false);
-      if (!tx) {
-        low = mid + 1;
-      } else {
-        high = mid;
-      }
-    }
-
-    return low;
-  }
-
-  private async syncAccount(address: string) {
-    const account = await this.provider.getAccount(address);
-
-    await prisma.$executeRaw`
-      INSERT INTO "Account"
-        (
-          "address",
-          "sequenceNumber",
-          "authenticationKey",
-          "sentEventsKey",
-          "receivedEventsKey",
-          "delegatedKeyRotationCapability",
-          "delegatedWithdrawalCapability",
-          "isFrozen",
-          "role",
-          "version"
-        )
-      VALUES
-        (
-          ${Buffer.from(account.address, 'hex')},
-          ${account.sequence_number},
-          ${Buffer.from(account.authentication_key, 'hex')},
-          ${Buffer.from(account.sent_events_key, 'hex')},
-          ${Buffer.from(account.received_events_key, 'hex')},
-          ${account.delegated_key_rotation_capability},
-          ${account.delegated_withdrawal_capability},
-          ${account.is_frozen},
-          (${getAccountRoleType(account.role.type)!})::"AccountRole",
-          ${account.version}
-        )
-      ON CONFLICT ("address")
-      DO UPDATE
-          SET "isFrozen" = EXCLUDED."isFrozen"
-    `;
-  }
-
   public async syncTransactions(version: number) {
     const transactions = await this.provider.getTransactions(version, 1, true);
 
@@ -538,17 +441,17 @@ class BlockchainWatcher {
           "exchangeRateUpdateEventsKey"
         )
       VALUES ${_.map(
-        new Array(currencies.length),
+        new Array(length),
         (__, it) =>
           `(${[
-            `$${it + 1}`,
-            `$${it + 2}`,
-            `$${it + 3}`,
-            `$${it + 4}`,
-            `$${it + 5}`,
-            `$${it + 6}`,
-            `$${it + 7}`,
-            `$${it + 8}`,
+            `$${it * 8 + 1}`,
+            `$${it * 8 + 2}`,
+            `$${it * 8 + 3}`,
+            `$${it * 8 + 4}`,
+            `$${it * 8 + 5}`,
+            `$${it * 8 + 6}`,
+            `$${it * 8 + 7}`,
+            `$${it * 8 + 8}`,
           ].join()})`
       ).join()}
       ON CONFLICT DO NOTHING
@@ -569,6 +472,103 @@ class BlockchainWatcher {
     }
 
     await prisma.$queryRawUnsafe(query, ...data);
+  }
+
+  private async init() {
+    await this.syncVersion();
+
+    // await this.syncAccount('d0383924341821f9e43a6cff46f0a74e');
+
+    setInterval(() => {
+      this.syncVersion().catch((err) => {
+        console.log(err);
+      });
+    }, 5_000);
+
+    const missingVersionsManager = await MissingVersionsManager.create(this);
+
+    // console.log('fetching....');
+    // const accounts: { sender: Buffer }[] = await prisma.$queryRaw`
+    //   SELECT DISTINCT "sender" FROM "ReceivedPaymentEvent"
+    // `;
+    // console.log('done', accounts.length);
+
+    // for (const account of accounts) {
+    //   const address = account.sender.toString('hex')
+    //   console.log(address);
+    //   await this.syncAccount(address);
+    // }
+
+    // await this.syncTransactions(82571788);
+
+    // await this.syncCurrencies();
+  }
+
+  private async getMax(): Promise<number | undefined> {
+    const version = await prisma.version.findFirst({
+      take: 1,
+      orderBy: {
+        version: 'desc',
+      },
+    });
+    if (version) {
+      return Number(version.version);
+    }
+    return undefined;
+  }
+
+  private async findMin(from: number): Promise<number> {
+    let low = 1;
+    let high = from;
+
+    while (low < high) {
+      const mid = (low + high) >>> 1;
+      console.log(low, high, mid);
+      const tx = await this.provider.getTransactions(mid, 1, false);
+      if (!tx) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+
+    return low;
+  }
+
+  private async syncAccount(address: string) {
+    const account = await this.provider.getAccount(address);
+
+    await prisma.$executeRaw`
+      INSERT INTO "Account"
+        (
+          "address",
+          "sequenceNumber",
+          "authenticationKey",
+          "sentEventsKey",
+          "receivedEventsKey",
+          "delegatedKeyRotationCapability",
+          "delegatedWithdrawalCapability",
+          "isFrozen",
+          "role",
+          "version"
+        )
+      VALUES
+        (
+          ${Buffer.from(account.address, 'hex')},
+          ${account.sequence_number},
+          ${Buffer.from(account.authentication_key, 'hex')},
+          ${Buffer.from(account.sent_events_key, 'hex')},
+          ${Buffer.from(account.received_events_key, 'hex')},
+          ${account.delegated_key_rotation_capability},
+          ${account.delegated_withdrawal_capability},
+          ${account.is_frozen},
+          (${getAccountRoleType(account.role.type)!})::"AccountRole",
+          ${account.version}
+        )
+      ON CONFLICT ("address")
+      DO UPDATE
+          SET "isFrozen" = EXCLUDED."isFrozen"
+    `;
   }
 }
 
