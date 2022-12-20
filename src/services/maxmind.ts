@@ -1,7 +1,8 @@
 import { Reader, ReaderModel } from '@maxmind/geoip2-node';
+import config from '../config.js';
 
 const getReader = async (): Promise<ReaderModel> => {
-  const reader = await Reader.open('/Users/will/Projects/123_0L/GeoLite2-City.mmdb');
+  const reader = await Reader.open(config.maxmind.dbPath);
   return reader;
 };
 
