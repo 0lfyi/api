@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { Point, stringToLines } from '@influxdata/influxdb-client';
+import { Point } from '@influxdata/influxdb-client';
 import EventSource from 'eventsource';
 import { writeApi } from '../../services/influxdb.js';
 import rootLogger from '../../logger.js';
