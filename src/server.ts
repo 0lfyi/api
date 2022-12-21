@@ -50,6 +50,4 @@ export const listen = async (): Promise<void> => {
   if (config.app.roles.includes('jobs-runner')) {
     schedule('Report Metrics', `* * * * * *`, reportMetrics);
   }
-
-  await gasUsageDownsampler();
 };
