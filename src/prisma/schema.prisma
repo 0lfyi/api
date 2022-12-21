@@ -240,7 +240,7 @@ model ValidatorPresence {
 }
 
 model HistoricalGasUsage {
-  gasUsed Int
+  gasUsed Float
   volume  Int
   date    DateTime
   type    TransactionType
