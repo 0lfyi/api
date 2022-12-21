@@ -14,5 +14,6 @@ export default parse(`
     versions(start: Int, limit: Int): [Version!]
     versionCount: BigInt
     search(query: String!): SearchResult
+    validatorPresences: [ValidatorPresence!]!
   }
 `);

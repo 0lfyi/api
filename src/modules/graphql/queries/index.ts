@@ -3,6 +3,7 @@ import versions from './versions.js';
 import version from './version.js';
 import versionCount from './versionCount.js';
 import search from './search.js';
+import validatorPresences from './validator-presences.js';
 
 export default {
   account,
@@ -10,4 +11,5 @@ export default {
   versions,
   versionCount,
   search,
+  validatorPresences,
 };
