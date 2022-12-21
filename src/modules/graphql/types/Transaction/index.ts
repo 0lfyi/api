@@ -8,24 +8,25 @@ const events = async (
   context: any,
   ...others: any[]
 ): Promise<any[]> => {
-  const { newBlockEvents } = await Bluebird.props({
-    newBlockEvents: prisma.newBlockEvent.findMany({
-      where: {
-        transactionVersion: transaction.version,
-      },
-    }),
-  });
+  return [];
+  // const { newBlockEvents } = await Bluebird.props({
+  //   newBlockEvents: prisma.newBlockEvent.findMany({
+  //     where: {
+  //       transactionVersion: transaction.version,
+  //     },
+  //   }),
+  // });
 
-  return [
-    ...newBlockEvents.map((newBlockEvent) => ({
-      __type: 'NewBlockEvent',
-      transactionVersion: new BN(newBlockEvent.transactionVersion.toString()),
-      sequenceNumber: new BN(newBlockEvent.sequenceNumber.toString()),
-      round: new BN(newBlockEvent.round.toString()),
-      proposer: newBlockEvent.proposer.toString('hex'),
-      proposedTime: new BN(newBlockEvent.proposedTime.toString()),
-    })),
-  ];
+  // return [
+  //   ...newBlockEvents.map((newBlockEvent) => ({
+  //     __type: 'NewBlockEvent',
+  //     transactionVersion: new BN(newBlockEvent.transactionVersion.toString()),
+  //     sequenceNumber: new BN(newBlockEvent.sequenceNumber.toString()),
+  //     round: new BN(newBlockEvent.round.toString()),
+  //     proposer: newBlockEvent.proposer.toString('hex'),
+  //     proposedTime: new BN(newBlockEvent.proposedTime.toString()),
+  //   })),
+  // ];
 };
 
 export default { events };
