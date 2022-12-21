@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import _ from 'lodash';
 import prisma from '../../services/prisma.js';
 import rootLogger from '../../logger.js';
@@ -89,7 +90,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "NewBlockEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "round",
                     "proposer",
@@ -97,7 +98,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.round},
                     ${Buffer.from(event.data.proposer, 'hex')},
@@ -111,7 +112,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "ReceivedPaymentEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "amount",
                     "currency",
@@ -121,7 +122,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
                     ${event.data.amount.currency},
@@ -137,7 +138,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "SentPaymentEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "amount",
                     "currency",
@@ -147,7 +148,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
                     ${event.data.amount.currency},
@@ -163,14 +164,14 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "CreateAccountEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "createdAddress",
                     "roleId"
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${Buffer.from(event.data.created_address, 'hex')},
                     ${event.data.role_id}
@@ -184,14 +185,14 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "MintEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "amount",
                     "currency"
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
                     ${event.data.amount.currency}
@@ -204,7 +205,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "BurnEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "amount",
                     "currency",
@@ -212,7 +213,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
                     ${event.data.amount.currency},
@@ -226,13 +227,13 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "NewEpochEvent"
                   (
-                    "transactionVersion",
+                    "transactionHash",
                     "sequenceNumber",
                     "epoch"
                   )
                 VALUES
                   (
-                    ${event.transaction_version},
+                    ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.epoch}
                   )
@@ -249,14 +250,14 @@ class BlockchainWatcher {
             INSERT INTO "Event"
               (
                 "key",
-                "transactionVersion",
+                "transactionHash",
                 "sequenceNumber",
                 "type"
               )
             VALUES
               (
                 ${Buffer.from(event.key, 'hex')},
-                ${event.transaction_version},
+                ${Buffer.from(transaction.hash, 'hex')},
                 ${event.sequence_number},
                 (${getEventType(event.data.type)!})::"EventType"
               )
@@ -477,31 +478,13 @@ class BlockchainWatcher {
   private async init() {
     await this.syncVersion();
 
-    // await this.syncAccount('d0383924341821f9e43a6cff46f0a74e');
-
     setInterval(() => {
       this.syncVersion().catch((err) => {
         console.log(err);
       });
     }, 5_000);
 
-    const missingVersionsManager = await MissingVersionsManager.create(this);
-
-    // console.log('fetching....');
-    // const accounts: { sender: Buffer }[] = await prisma.$queryRaw`
-    //   SELECT DISTINCT "sender" FROM "ReceivedPaymentEvent"
-    // `;
-    // console.log('done', accounts.length);
-
-    // for (const account of accounts) {
-    //   const address = account.sender.toString('hex')
-    //   console.log(address);
-    //   await this.syncAccount(address);
-    // }
-
-    // await this.syncTransactions(82571788);
-
-    // await this.syncCurrencies();
+    await MissingVersionsManager.create(this);
   }
 
   private async getMax(): Promise<number | undefined> {
@@ -523,7 +506,6 @@ class BlockchainWatcher {
 
     while (low < high) {
       const mid = (low + high) >>> 1;
-      console.log(low, high, mid);
       const tx = await this.provider.getTransactions(mid, 1, false);
       if (!tx) {
         low = mid + 1;

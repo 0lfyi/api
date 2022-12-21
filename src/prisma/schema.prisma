@@ -111,29 +111,26 @@ enum EventType {
 }
 
 model Event {
+  transactionHash    Bytes
   key                Bytes
-  transactionHash    Bytes?
-  transactionVersion BigInt
   sequenceNumber     BigInt
   type               EventType
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model NewBlockEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   round              BigInt
   proposer           Bytes
   proposedTime       BigInt
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model SentPaymentEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
@@ -141,12 +138,11 @@ model SentPaymentEvent {
   sender             Bytes
   metadata           Bytes
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model ReceivedPaymentEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
@@ -154,47 +150,43 @@ model ReceivedPaymentEvent {
   sender             Bytes
   metadata           Bytes
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model CreateAccountEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   createdAddress     Bytes
   roleId             BigInt
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model MintEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model BurnEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   amount             BigInt
   currency           String
   preburnAddress     Bytes
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 model NewEpochEvent {
-  transactionVersion BigInt
-  transactionHash    Bytes?
+  transactionHash    Bytes
   sequenceNumber     BigInt
   epoch              BigInt
 
-  @@unique([transactionVersion, sequenceNumber])
+  @@unique([transactionHash, sequenceNumber])
 }
 
 enum AccountRole {
