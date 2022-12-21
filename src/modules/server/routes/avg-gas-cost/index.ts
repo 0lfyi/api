@@ -41,8 +41,6 @@ export const get = [
       ORDER BY ${aggregate}
     `;
 
-    console.log(query);
-
     const stats = await prisma.version.aggregate({
       _max: {
         timestamp: true,
@@ -51,8 +49,6 @@ export const get = [
         timestamp: true,
       },
     });
-
-    console.log(stats);
 
     const rows: {
       time: bigint;

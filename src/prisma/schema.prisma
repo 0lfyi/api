@@ -1,11 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   extensions = uuidOssp(map: "uuid-ossp")
 }
 
@@ -237,4 +237,13 @@ model ValidatorPresence {
   validator Validator @relation(fields: [validatorId], references: [id])
 
   createdAt DateTime @default(now())
+}
+
+model HistoricalGasUsage {
+  gasUsed Int
+  volume  Int
+  date    DateTime
+  type    TransactionType
+
+  @@unique([date, type])
 }
