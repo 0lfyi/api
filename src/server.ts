@@ -1,5 +1,4 @@
 import nodeSchedule from 'node-schedule';
-import { InfluxDB, Point } from '@influxdata/influxdb-client';
 import Server from './modules/server/index.js';
 import config from './config.js';
 import logger from './logger.js';
@@ -7,7 +6,6 @@ import BlockchainWatcher from './modules/blockchain-watcher/BlockchainWatcher.js
 import reportMetrics from './jobs/report-metrics/index.js';
 import gasUsageDownsampler from './jobs/gas-usage-downsampler/index.js';
 import VitalsWatcher from './modules/vitals-watcher/VitalsWatcher.js';
-import prisma from './services/prisma.js';
 
 const schedule = (name: string, cronRule: string, handler: () => Promise<void>) => {
   const job = nodeSchedule.scheduleJob(cronRule, () => {
@@ -49,5 +47,9 @@ export const listen = async (): Promise<void> => {
 
   if (config.app.roles.includes('jobs-runner')) {
     schedule('Report Metrics', `* * * * * *`, reportMetrics);
+  }
+
+  if (config.app.roles.includes('gas-usage-downsampler')) {
+    await gasUsageDownsampler();
   }
 };

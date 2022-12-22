@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-underscore-dangle */
+
 import type { TransactionType } from '@prisma/client';
 import _ from 'lodash';
 import rootLogger from '../../logger.js';
@@ -30,8 +31,6 @@ class GasUsageDownsampler {
   }
 
   private async init() {
-    this.logger.debug('hello');
-
     const srcStats = await prisma.version.aggregate({
       _max: {
         timestamp: true,
@@ -49,12 +48,12 @@ class GasUsageDownsampler {
     const srcEnd = this.normalizeTimestamp(srcStats._max.timestamp);
 
     for (let it = srcStart; it <= srcEnd; it += this.sampleSize) {
-      // const downSampledData: {
-      //   date: number;
-      //   gasUsed: number;
-      //   volume: number;
-      //   type: TransactionType;
-      // }[] = [];
+      const downSampledData: {
+        date: number;
+        gasUsed: string;
+        volume: number;
+        type: TransactionType;
+      }[] = [];
 
       const sample: {
         timestamp: bigint;
@@ -74,6 +73,10 @@ class GasUsageDownsampler {
           "Version"."timestamp" <= ${(it + this.batchSize * this.sampleSize) * 1_000}
       `;
 
+      if (!sample.length) {
+        break;
+      }
+
       const typesSample = _.groupBy(sample, 'type');
 
       for (const type of Object.keys(typesSample)) {
@@ -87,92 +90,45 @@ class GasUsageDownsampler {
           const values = frames.map((frame) => Number(frame.gasUsed));
           const value = values.reduce((prev, curr) => prev + curr, 0) / volume;
 
-          const downSampledData: {
-            date: number;
-            gasUsed: number;
-            volume: number;
-            type: TransactionType;
-          }[] = [];
-
           downSampledData.push({
             date: parseInt(timestamp, 10),
-            gasUsed: value,
+            gasUsed: `${value}`,
             volume,
             type: type as TransactionType,
           });
-
-          const query = `
-            INSERT INTO "HistoricalGasUsage"
-              (
-                "gasUsed",
-                "volume",
-                "date",
-                "type"
-              )
-            VALUES ${_.map(
-              new Array(downSampledData.length),
-              (__, idx) =>
-                `(${[
-                  `$${idx * 4 + 1}`,
-                  `$${idx * 4 + 2}`,
-                  `$${idx * 4 + 3}`,
-                  `($${idx * 4 + 4})::"TransactionType"`,
-                ].join()})`
-            ).join()}
-            ON CONFLICT ("date", "type")
-            DO UPDATE SET 
-              "gasUsed" = EXCLUDED."gasUsed",
-              "volume" = EXCLUDED."volume"
-            `;
-
-          const queryData = _.flatten(
-            downSampledData.map((it) => [it.gasUsed, it.volume, new Date(it.date), it.type])
-          );
-
-          try {
-            console.log(queryData);
-            await prisma.$queryRawUnsafe(query, ...queryData);
-          } catch (err) {
-            console.log(query, queryData);
-            throw err;
-          }
         }
       }
 
-      // const query = `
-      //   INSERT INTO "HistoricalGasUsage"
-      //     (
-      //       "gasUsed",
-      //       "volume",
-      //       "date",
-      //       "type"
-      //     )
-      //   VALUES ${_.map(
-      //     new Array(downSampledData.length),
-      //     (__, idx) =>
-      //       `(${[
-      //         `$${idx * 4 + 1}`,
-      //         `$${idx * 4 + 2}`,
-      //         `$${idx * 4 + 3}`,
-      //         `($${idx * 4 + 4})::"TransactionType"`,
-      //       ].join()})`
-      //   ).join()}
-      //   ON CONFLICT ("date", "type")
-      //   DO UPDATE SET 
-      //     "gasUsed" = EXCLUDED."gasUsed",
-      //     "volume" = EXCLUDED."volume"
-      // `;
+      const query = `
+        INSERT INTO "HistoricalGasUsage"
+          (
+            "gasUsed",
+            "volume",
+            "date",
+            "type"
+          )
+        VALUES ${_.map(
+          new Array(downSampledData.length),
+          (__, idx) =>
+            `(${[
+              `($${idx * 4 + 1})::float8`,
+              `$${idx * 4 + 2}`,
+              `$${idx * 4 + 3}`,
+              `($${idx * 4 + 4})::"TransactionType"`,
+            ].join()})`
+        ).join()}
+        ON CONFLICT ("date", "type")
+        DO UPDATE SET 
+          "gasUsed" = EXCLUDED."gasUsed",
+          "volume" = EXCLUDED."volume"
+        `;
 
-      // const queryData = _.flatten(
-      //   downSampledData.map((it) => [it.gasUsed, it.volume, new Date(it.date), it.type])
-      // );
+      const queryData = _.flatten(
+        downSampledData.map((it) => [it.gasUsed, it.volume, new Date(it.date), it.type])
+      );
 
-      // try {
-      //   await prisma.$queryRawUnsafe(query, ...queryData);
-      // } catch (err) {
-      //   console.log(query, queryData);
-      //   throw err;
-      // }
+      const affectedRow: number = await prisma.$executeRawUnsafe(query, ...queryData);
+      this.logger.debug(`Affected Row: ${affectedRow}`);
     }
 
     // const destStats = await prisma.historicalGasUsage.aggregate({
@@ -189,7 +145,7 @@ class GasUsageDownsampler {
 }
 
 const gasUsageDownsamplerJob = async () => {
-  const gasUsageDownsampler = await GasUsageDownsampler.create();
+  await GasUsageDownsampler.create();
 };
 
 export default gasUsageDownsamplerJob;
