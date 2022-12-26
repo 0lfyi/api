@@ -11,4 +11,8 @@ program.command('serve').action(() => {
   commands.serve();
 });
 
+program.command('seed').action(() => {
+  commands.seed();
+});
+
 program.parse(process.argv);

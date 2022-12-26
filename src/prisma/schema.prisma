@@ -111,80 +111,80 @@ enum EventType {
 }
 
 model Event {
-  transactionHash    Bytes
-  key                Bytes
-  sequenceNumber     BigInt
-  type               EventType
+  transactionHash Bytes
+  key             Bytes
+  sequenceNumber  BigInt
+  type            EventType
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model NewBlockEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  round              BigInt
-  proposer           Bytes
-  proposedTime       BigInt
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  round           BigInt
+  proposer        Bytes
+  proposedTime    BigInt
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model SentPaymentEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  amount             BigInt
-  currency           String
-  receiver           Bytes
-  sender             Bytes
-  metadata           Bytes
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  amount          BigInt
+  currency        String
+  receiver        Bytes
+  sender          Bytes
+  metadata        Bytes
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model ReceivedPaymentEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  amount             BigInt
-  currency           String
-  receiver           Bytes
-  sender             Bytes
-  metadata           Bytes
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  amount          BigInt
+  currency        String
+  receiver        Bytes
+  sender          Bytes
+  metadata        Bytes
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model CreateAccountEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  createdAddress     Bytes
-  roleId             BigInt
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  createdAddress  Bytes
+  roleId          BigInt
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model MintEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  amount             BigInt
-  currency           String
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  amount          BigInt
+  currency        String
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model BurnEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  amount             BigInt
-  currency           String
-  preburnAddress     Bytes
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  amount          BigInt
+  currency        String
+  preburnAddress  Bytes
 
   @@unique([transactionHash, sequenceNumber])
 }
 
 model NewEpochEvent {
-  transactionHash    Bytes
-  sequenceNumber     BigInt
-  epoch              BigInt
+  transactionHash Bytes
+  sequenceNumber  BigInt
+  epoch           BigInt
 
   @@unique([transactionHash, sequenceNumber])
 }
@@ -238,4 +238,10 @@ model HistoricalGasUsage {
   type    TransactionType
 
   @@unique([date, type])
+}
+
+model CommunityWallet {
+  address     Bytes   @id
+  description String
+  link        String?
 }

@@ -4,5 +4,14 @@ import Transaction from './Transaction/schema.js';
 import Event from './Event/schema.js';
 import NewBlockEvent from './NewBlockEvent/schema.js';
 import ValidatorPresence from './ValidatorPresence/schema.js';
+import CommunityWallet from './CommunityWallet/schema.js';
 
-export default [Account, Version, Transaction, Event, NewBlockEvent, ValidatorPresence];
+export default [
+  Account,
+  Version,
+  Transaction,
+  Event,
+  NewBlockEvent,
+  ValidatorPresence,
+  CommunityWallet,
+];

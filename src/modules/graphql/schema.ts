@@ -15,5 +15,6 @@ export default parse(`
     versionCount: BigInt
     search(query: String!): SearchResult
     validatorPresences: [ValidatorPresence!]!
+    communityWallets: [CommunityWallet!]!
   }
 `);

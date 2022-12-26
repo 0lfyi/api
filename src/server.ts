@@ -6,6 +6,7 @@ import BlockchainWatcher from './modules/blockchain-watcher/BlockchainWatcher.js
 import reportMetrics from './jobs/report-metrics/index.js';
 import gasUsageDownsampler from './jobs/gas-usage-downsampler/index.js';
 import VitalsWatcher from './modules/vitals-watcher/VitalsWatcher.js';
+import prisma from './services/prisma.js';
 
 const schedule = (name: string, cronRule: string, handler: () => Promise<void>) => {
   const job = nodeSchedule.scheduleJob(cronRule, () => {
