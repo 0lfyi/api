@@ -9,6 +9,7 @@ module.exports = {
   ],
   parserOptions: {},
   rules: {
+    'import/no-unresolved': 'off',
     'no-restricted-exports': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'error',
     '@typescript-eslint/member-ordering': 'error',

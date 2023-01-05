@@ -5,5 +5,6 @@ export default parse(`
     address: ID!
     link: String
     description: String
+    account: Account!
   }
 `);

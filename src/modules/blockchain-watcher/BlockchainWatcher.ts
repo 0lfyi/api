@@ -83,13 +83,47 @@ class BlockchainWatcher {
     const transactions = await this.provider.getTransactions(version, 1, true);
 
     for (const transaction of transactions) {
+      const transactionHash = Buffer.from(transaction.hash, 'hex');
+
+      await prisma.$executeRaw`
+        DELETE FROM "NewBlockEvent"
+        WHERE "transactionHash" = ${transactionHash};
+      `;
+
+      await prisma.$executeRaw`
+        DELETE FROM "ReceivedPaymentEvent"
+        WHERE "transactionHash" = ${transactionHash};
+      `;
+
+      await prisma.$executeRaw`
+        DELETE FROM "SentPaymentEvent"
+        WHERE "transactionHash" = ${transactionHash};
+      `;
+
+      await prisma.$executeRaw`
+        DELETE FROM "MintEvent"
+        WHERE "transactionHash" = ${transactionHash};
+      `;
+
+      await prisma.$executeRaw`
+        DELETE FROM "Event"
+        WHERE "transactionHash" = ${transactionHash};
+      `;
+
+      await prisma.$executeRaw`
+        DELETE FROM "NewEpochEvent"
+        WHERE "transactionHash" = ${transactionHash};
+      `;
+
       if (transaction.events) {
-        for (const event of transaction.events) {
+        for (let i = 0; i < transaction.events.length; ++i) {
+          const event = transaction.events[i];
           switch (event.data.type) {
             case 'newblock':
               await prisma.$executeRaw`
                 INSERT INTO "NewBlockEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "round",
@@ -98,6 +132,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.round},
@@ -112,6 +147,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "ReceivedPaymentEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "amount",
@@ -122,6 +158,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
@@ -138,6 +175,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "SentPaymentEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "amount",
@@ -148,6 +186,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
@@ -164,6 +203,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "CreateAccountEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "createdAddress",
@@ -171,6 +211,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${Buffer.from(event.data.created_address, 'hex')},
@@ -185,6 +226,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "MintEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "amount",
@@ -192,6 +234,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
@@ -205,6 +248,7 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "BurnEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "amount",
@@ -213,6 +257,7 @@ class BlockchainWatcher {
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.amount.amount},
@@ -227,12 +272,14 @@ class BlockchainWatcher {
               await prisma.$executeRaw`
                 INSERT INTO "NewEpochEvent"
                   (
+                    "id",
                     "transactionHash",
                     "sequenceNumber",
                     "epoch"
                   )
                 VALUES
                   (
+                    ${i},
                     ${Buffer.from(transaction.hash, 'hex')},
                     ${event.sequence_number},
                     ${event.data.epoch}
@@ -249,6 +296,7 @@ class BlockchainWatcher {
           await prisma.$executeRaw`
             INSERT INTO "Event"
               (
+                "id",
                 "key",
                 "transactionHash",
                 "sequenceNumber",
@@ -256,6 +304,7 @@ class BlockchainWatcher {
               )
             VALUES
               (
+                ${i},
                 ${Buffer.from(event.key, 'hex')},
                 ${Buffer.from(transaction.hash, 'hex')},
                 ${event.sequence_number},

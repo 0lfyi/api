@@ -8,7 +8,7 @@ const bigIntScalar = new GraphQLScalarType({
   description: 'BigInt custom scalar type',
 
   serialize(value) {
-    if (is.directInstanceOf(value, BN)) {
+    if (value !== null && value !== undefined && typeof value.toString === 'function') {
       return value.toString();
     }
     return value;

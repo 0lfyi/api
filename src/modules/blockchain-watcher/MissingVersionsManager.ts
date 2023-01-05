@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 import _ from 'lodash';
 import Bluebird from 'bluebird';
 import prisma from '../../services/prisma.js';
@@ -12,16 +14,16 @@ class MissingVersionsManager {
 
   private blockchainWatcher: BlockchainWatcher;
 
+  private constructor(blockchainWatcher: BlockchainWatcher) {
+    this.blockchainWatcher = blockchainWatcher;
+  }
+
   public static async create(
     blockchainWatcher: BlockchainWatcher
   ): Promise<MissingVersionsManager> {
     const missingVersionsManager = new MissingVersionsManager(blockchainWatcher);
     await missingVersionsManager.init();
     return missingVersionsManager;
-  }
-
-  private constructor(blockchainWatcher: BlockchainWatcher) {
-    this.blockchainWatcher = blockchainWatcher;
   }
 
   private async init() {
@@ -130,6 +132,8 @@ class MissingVersionsManager {
         this.logger.error(`Error syncing version ${it}: ${err.message}`);
       });
     }
+
+    await Promise.all(promises);
   }
 
   private async countMissingBlocks(min: number, max: number): Promise<number> {

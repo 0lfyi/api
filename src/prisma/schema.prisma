@@ -111,25 +111,28 @@ enum EventType {
 }
 
 model Event {
+  id              Int
   transactionHash Bytes
   key             Bytes
   sequenceNumber  BigInt
   type            EventType
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model NewBlockEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   round           BigInt
   proposer        Bytes
   proposedTime    BigInt
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model SentPaymentEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   amount          BigInt
@@ -138,10 +141,11 @@ model SentPaymentEvent {
   sender          Bytes
   metadata        Bytes
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model ReceivedPaymentEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   amount          BigInt
@@ -150,43 +154,47 @@ model ReceivedPaymentEvent {
   sender          Bytes
   metadata        Bytes
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model CreateAccountEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   createdAddress  Bytes
   roleId          BigInt
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model MintEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   amount          BigInt
   currency        String
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model BurnEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   amount          BigInt
   currency        String
   preburnAddress  Bytes
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 model NewEpochEvent {
+  id              Int
   transactionHash Bytes
   sequenceNumber  BigInt
   epoch           BigInt
 
-  @@unique([transactionHash, sequenceNumber])
+  @@unique([id, transactionHash])
 }
 
 enum AccountRole {

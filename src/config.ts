@@ -3,12 +3,7 @@ import { assert } from '@sindresorhus/is';
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 
-type Role =
-  | 'api'
-  | 'blockchain-watcher'
-  | 'jobs-runner'
-  | 'vitals-watcher'
-  | 'gas-usage-downsampler';
+type Role = 'api' | 'blockchain-watcher' | 'jobs-runner' | 'vitals-watcher';
 
 const config = {
   instanceId: uuidv4(),
