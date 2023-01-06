@@ -1,4 +1,5 @@
 /* eslint-disable no-bitwise */
+
 import _ from 'lodash';
 import prisma from '../../services/prisma.js';
 import rootLogger from '../../logger.js';
@@ -85,38 +86,46 @@ class BlockchainWatcher {
     for (const transaction of transactions) {
       const transactionHash = Buffer.from(transaction.hash, 'hex');
 
-      await prisma.$executeRaw`
-        DELETE FROM "NewBlockEvent"
-        WHERE "transactionHash" = ${transactionHash};
-      `;
+      if (transaction.events && transaction.events.length > 0) {
+        const { length } = transaction.events;
 
-      await prisma.$executeRaw`
-        DELETE FROM "ReceivedPaymentEvent"
-        WHERE "transactionHash" = ${transactionHash};
-      `;
+        await prisma.$executeRaw`
+          DELETE FROM "NewBlockEvent"
+          WHERE "transactionHash" = ${transactionHash};
+          AND "id" > ${length - 1}
+        `;
 
-      await prisma.$executeRaw`
-        DELETE FROM "SentPaymentEvent"
-        WHERE "transactionHash" = ${transactionHash};
-      `;
+        await prisma.$executeRaw`
+          DELETE FROM "ReceivedPaymentEvent"
+          WHERE "transactionHash" = ${transactionHash};
+          AND "id" > ${length - 1}
+        `;
 
-      await prisma.$executeRaw`
-        DELETE FROM "MintEvent"
-        WHERE "transactionHash" = ${transactionHash};
-      `;
+        await prisma.$executeRaw`
+          DELETE FROM "SentPaymentEvent"
+          WHERE "transactionHash" = ${transactionHash};
+          AND "id" > ${length - 1}
+        `;
 
-      await prisma.$executeRaw`
-        DELETE FROM "Event"
-        WHERE "transactionHash" = ${transactionHash};
-      `;
+        await prisma.$executeRaw`
+          DELETE FROM "MintEvent"
+          WHERE "transactionHash" = ${transactionHash};
+          AND "id" > ${length - 1}
+        `;
 
-      await prisma.$executeRaw`
-        DELETE FROM "NewEpochEvent"
-        WHERE "transactionHash" = ${transactionHash};
-      `;
+        await prisma.$executeRaw`
+          DELETE FROM "Event"
+          WHERE "transactionHash" = ${transactionHash};
+          AND "id" > ${length - 1}
+        `;
 
-      if (transaction.events) {
-        for (let i = 0; i < transaction.events.length; ++i) {
+        await prisma.$executeRaw`
+          DELETE FROM "NewEpochEvent"
+          WHERE "transactionHash" = ${transactionHash};
+          AND "id" > ${length - 1}
+        `;
+
+        for (let i = 0; i < length; ++i) {
           const event = transaction.events[i];
           switch (event.data.type) {
             case 'newblock':
@@ -139,7 +148,12 @@ class BlockchainWatcher {
                     ${Buffer.from(event.data.proposer, 'hex')},
                     ${event.data.proposed_time}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "round" = EXCLUDED."round",
+                  "proposer" = EXCLUDED."proposer",
+                  "proposedTime" = EXCLUDED."proposedTime"
               `;
               break;
 
@@ -167,7 +181,14 @@ class BlockchainWatcher {
                     ${Buffer.from(event.data.sender, 'hex')},
                     ${Buffer.from(event.data.metadata, 'hex')}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "amount" = EXCLUDED."amount",
+                  "currency" = EXCLUDED."currency",
+                  "receiver" = EXCLUDED."receiver",
+                  "sender" = EXCLUDED."sender",
+                  "metadata" = EXCLUDED."metadata"
               `;
               break;
 
@@ -195,7 +216,14 @@ class BlockchainWatcher {
                     ${Buffer.from(event.data.sender, 'hex')},
                     ${Buffer.from(event.data.metadata, 'hex')}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "amount" = EXCLUDED."amount",
+                  "currency" = EXCLUDED."currency",
+                  "receiver" = EXCLUDED."receiver",
+                  "sender" = EXCLUDED."sender",
+                  "metadata" = EXCLUDED."metadata"
               `;
               break;
 
@@ -217,7 +245,11 @@ class BlockchainWatcher {
                     ${Buffer.from(event.data.created_address, 'hex')},
                     ${event.data.role_id}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "createdAddress" = EXCLUDED."createdAddress",
+                  "roleId" = EXCLUDED."roleId"
               `;
               await this.syncAccount(event.data.created_address);
               break;
@@ -240,7 +272,12 @@ class BlockchainWatcher {
                     ${event.data.amount.amount},
                     ${event.data.amount.currency}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "createdAddress" = EXCLUDED."createdAddress",
+                  "amount" = EXCLUDED."amount",
+                  "currency" = EXCLUDED."currency"
               `;
               break;
 
@@ -264,7 +301,12 @@ class BlockchainWatcher {
                     ${event.data.amount.currency},
                     ${Buffer.from(event.data.preburn_address, 'hex')}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "amount" = EXCLUDED."amount",
+                  "currency" = EXCLUDED."currency",
+                  "preburnAddress" = EXCLUDED."preburnAddress"
               `;
               break;
 
@@ -284,7 +326,10 @@ class BlockchainWatcher {
                     ${event.sequence_number},
                     ${event.data.epoch}
                   )
-                ON CONFLICT DO NOTHING
+                ON CONFLICT ("id", "transactionHash")
+                DO UPDATE SET
+                  "sequenceNumber" = EXCLUDED."sequenceNumber",
+                  "epoch" = EXCLUDED."epoch"
               `;
               break;
 
@@ -310,9 +355,44 @@ class BlockchainWatcher {
                 ${event.sequence_number},
                 (${getEventType(event.data.type)!})::"EventType"
               )
-            ON CONFLICT DO NOTHING
+            ON CONFLICT ("id", "transactionHash")
+            DO UPDATE SET
+              "key" = EXCLUDED."key",
+              "transactionHash" = EXCLUDED."transactionHash",
+              "sequenceNumber" = EXCLUDED."sequenceNumber",
+              "type" = EXCLUDED."type"
           `;
         }
+      } else {
+        await prisma.$executeRaw`
+          DELETE FROM "NewBlockEvent"
+          WHERE "transactionHash" = ${transactionHash};
+        `;
+
+        await prisma.$executeRaw`
+          DELETE FROM "ReceivedPaymentEvent"
+          WHERE "transactionHash" = ${transactionHash};
+        `;
+
+        await prisma.$executeRaw`
+          DELETE FROM "SentPaymentEvent"
+          WHERE "transactionHash" = ${transactionHash};
+        `;
+
+        await prisma.$executeRaw`
+          DELETE FROM "MintEvent"
+          WHERE "transactionHash" = ${transactionHash};
+        `;
+
+        await prisma.$executeRaw`
+          DELETE FROM "Event"
+          WHERE "transactionHash" = ${transactionHash};
+        `;
+
+        await prisma.$executeRaw`
+          DELETE FROM "NewEpochEvent"
+          WHERE "transactionHash" = ${transactionHash};
+        `;
       }
 
       const transactionType: string = transaction.transaction.type;
@@ -597,8 +677,8 @@ class BlockchainWatcher {
           ${account.version}
         )
       ON CONFLICT ("address")
-      DO UPDATE
-          SET "isFrozen" = EXCLUDED."isFrozen"
+      DO UPDATE SET
+        "isFrozen" = EXCLUDED."isFrozen"
     `;
   }
 }
