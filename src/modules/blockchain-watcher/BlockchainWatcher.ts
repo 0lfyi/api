@@ -91,37 +91,37 @@ class BlockchainWatcher {
 
         await prisma.$executeRaw`
           DELETE FROM "NewBlockEvent"
-          WHERE "transactionHash" = ${transactionHash};
+          WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
         `;
 
         await prisma.$executeRaw`
           DELETE FROM "ReceivedPaymentEvent"
-          WHERE "transactionHash" = ${transactionHash};
+          WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
         `;
 
         await prisma.$executeRaw`
           DELETE FROM "SentPaymentEvent"
-          WHERE "transactionHash" = ${transactionHash};
+          WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
         `;
 
         await prisma.$executeRaw`
           DELETE FROM "MintEvent"
-          WHERE "transactionHash" = ${transactionHash};
+          WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
         `;
 
         await prisma.$executeRaw`
           DELETE FROM "Event"
-          WHERE "transactionHash" = ${transactionHash};
+          WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
         `;
 
         await prisma.$executeRaw`
           DELETE FROM "NewEpochEvent"
-          WHERE "transactionHash" = ${transactionHash};
+          WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
         `;
 
