@@ -83,53 +83,55 @@ class BlockchainWatcher {
   public async syncTransactions(version: number) {
     const transactions = await this.provider.getTransactions(version, 1, true);
 
+    const promises: Promise<unknown>[] = [];
+
     for (const transaction of transactions) {
       const transactionHash = Buffer.from(transaction.hash, 'hex');
 
       if (transaction.events && transaction.events.length > 0) {
         const { length } = transaction.events;
 
-        await prisma.$executeRaw`
+        promises.push(prisma.$executeRaw`
           DELETE FROM "NewBlockEvent"
           WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
-        `;
+        `);
 
-        await prisma.$executeRaw`
+        promises.push(prisma.$executeRaw`
           DELETE FROM "ReceivedPaymentEvent"
           WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
-        `;
+        `);
 
-        await prisma.$executeRaw`
+        promises.push(prisma.$executeRaw`
           DELETE FROM "SentPaymentEvent"
           WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
-        `;
+        `);
 
-        await prisma.$executeRaw`
+        promises.push(prisma.$executeRaw`
           DELETE FROM "MintEvent"
           WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
-        `;
+        `);
 
-        await prisma.$executeRaw`
+        promises.push(prisma.$executeRaw`
           DELETE FROM "Event"
           WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
-        `;
+        `);
 
-        await prisma.$executeRaw`
+        promises.push(prisma.$executeRaw`
           DELETE FROM "NewEpochEvent"
           WHERE "transactionHash" = ${transactionHash}
           AND "id" > ${length - 1}
-        `;
+        `);
 
         for (let i = 0; i < length; ++i) {
           const event = transaction.events[i];
           switch (event.data.type) {
             case 'newblock':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "NewBlockEvent"
                   (
                     "id",
@@ -154,11 +156,11 @@ class BlockchainWatcher {
                   "round" = EXCLUDED."round",
                   "proposer" = EXCLUDED."proposer",
                   "proposedTime" = EXCLUDED."proposedTime"
-              `;
+              `);
               break;
 
             case 'receivedpayment':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "ReceivedPaymentEvent"
                   (
                     "id",
@@ -189,11 +191,11 @@ class BlockchainWatcher {
                   "receiver" = EXCLUDED."receiver",
                   "sender" = EXCLUDED."sender",
                   "metadata" = EXCLUDED."metadata"
-              `;
+              `);
               break;
 
             case 'sentpayment':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "SentPaymentEvent"
                   (
                     "id",
@@ -224,11 +226,11 @@ class BlockchainWatcher {
                   "receiver" = EXCLUDED."receiver",
                   "sender" = EXCLUDED."sender",
                   "metadata" = EXCLUDED."metadata"
-              `;
+              `);
               break;
 
             case 'createaccount':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "CreateAccountEvent"
                   (
                     "id",
@@ -250,12 +252,12 @@ class BlockchainWatcher {
                   "sequenceNumber" = EXCLUDED."sequenceNumber",
                   "createdAddress" = EXCLUDED."createdAddress",
                   "roleId" = EXCLUDED."roleId"
-              `;
-              await this.syncAccount(event.data.created_address);
+              `);
+              promises.push(this.syncAccount(event.data.created_address));
               break;
 
             case 'mint':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "MintEvent"
                   (
                     "id",
@@ -278,11 +280,11 @@ class BlockchainWatcher {
                   "createdAddress" = EXCLUDED."createdAddress",
                   "amount" = EXCLUDED."amount",
                   "currency" = EXCLUDED."currency"
-              `;
+              `);
               break;
 
             case 'burn':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "BurnEvent"
                   (
                     "id",
@@ -307,11 +309,11 @@ class BlockchainWatcher {
                   "amount" = EXCLUDED."amount",
                   "currency" = EXCLUDED."currency",
                   "preburnAddress" = EXCLUDED."preburnAddress"
-              `;
+              `);
               break;
 
             case 'newepoch':
-              await prisma.$executeRaw`
+              promises.push(prisma.$executeRaw`
                 INSERT INTO "NewEpochEvent"
                   (
                     "id",
@@ -330,7 +332,7 @@ class BlockchainWatcher {
                 DO UPDATE SET
                   "sequenceNumber" = EXCLUDED."sequenceNumber",
                   "epoch" = EXCLUDED."epoch"
-              `;
+              `);
               break;
 
             default:
@@ -338,7 +340,7 @@ class BlockchainWatcher {
               throw new Error(`Implement ${event.data.type} event please`);
           }
 
-          await prisma.$executeRaw`
+          promises.push(prisma.$executeRaw`
             INSERT INTO "Event"
               (
                 "id",
@@ -361,44 +363,46 @@ class BlockchainWatcher {
               "transactionHash" = EXCLUDED."transactionHash",
               "sequenceNumber" = EXCLUDED."sequenceNumber",
               "type" = EXCLUDED."type"
-          `;
+          `);
         }
       } else {
-        await prisma.$executeRaw`
-          DELETE FROM "NewBlockEvent"
-          WHERE "transactionHash" = ${transactionHash};
-        `;
+        promises.push(
+          prisma.$executeRaw`
+            DELETE FROM "NewBlockEvent"
+            WHERE "transactionHash" = ${transactionHash};
+          `,
 
-        await prisma.$executeRaw`
-          DELETE FROM "ReceivedPaymentEvent"
-          WHERE "transactionHash" = ${transactionHash};
-        `;
+          prisma.$executeRaw`
+            DELETE FROM "ReceivedPaymentEvent"
+            WHERE "transactionHash" = ${transactionHash};
+          `,
 
-        await prisma.$executeRaw`
-          DELETE FROM "SentPaymentEvent"
-          WHERE "transactionHash" = ${transactionHash};
-        `;
+          prisma.$executeRaw`
+            DELETE FROM "SentPaymentEvent"
+            WHERE "transactionHash" = ${transactionHash};
+          `,
 
-        await prisma.$executeRaw`
-          DELETE FROM "MintEvent"
-          WHERE "transactionHash" = ${transactionHash};
-        `;
+          prisma.$executeRaw`
+            DELETE FROM "MintEvent"
+            WHERE "transactionHash" = ${transactionHash};
+          `,
 
-        await prisma.$executeRaw`
-          DELETE FROM "Event"
-          WHERE "transactionHash" = ${transactionHash};
-        `;
+          prisma.$executeRaw`
+            DELETE FROM "Event"
+            WHERE "transactionHash" = ${transactionHash};
+          `,
 
-        await prisma.$executeRaw`
-          DELETE FROM "NewEpochEvent"
-          WHERE "transactionHash" = ${transactionHash};
-        `;
+          prisma.$executeRaw`
+            DELETE FROM "NewEpochEvent"
+            WHERE "transactionHash" = ${transactionHash};
+          `
+        );
       }
 
       const transactionType: string = transaction.transaction.type;
       switch (transaction.transaction.type) {
         case 'blockmetadata':
-          await prisma.$executeRaw`
+          promises.push(prisma.$executeRaw`
             INSERT INTO "BlockMetadataTransaction"
               (
                 "hash",
@@ -410,11 +414,11 @@ class BlockchainWatcher {
                 ${transaction.transaction.timestamp_usecs}
               )
             ON CONFLICT DO NOTHING
-          `;
+          `);
           break;
 
         case 'user':
-          await prisma.$executeRaw`
+          promises.push(prisma.$executeRaw`
             INSERT INTO "UserTransaction"
               (
                 "hash",
@@ -480,7 +484,7 @@ class BlockchainWatcher {
                 ${transaction.transaction.script}
               )
             ON CONFLICT DO NOTHING
-          `;
+          `);
           break;
 
         default: {
@@ -488,7 +492,7 @@ class BlockchainWatcher {
         }
       }
 
-      await prisma.$executeRaw`
+      promises.push(prisma.$executeRaw`
         INSERT INTO "Transaction"
           (
             "hash",
@@ -508,8 +512,10 @@ class BlockchainWatcher {
             (${getTransactionType(transaction.transaction.type)!})::"TransactionType"
           )
         ON CONFLICT DO NOTHING
-      `;
+      `);
     }
+
+    await Promise.all(promises);
   }
 
   public async syncVersion(version?: number) {
@@ -605,13 +611,13 @@ class BlockchainWatcher {
   }
 
   private async init() {
-    await this.syncVersion();
-
-    setInterval(() => {
-      this.syncVersion().catch((err) => {
-        console.log(err);
+    const sync = () => {
+      this.syncVersion().finally(() => {
+        setTimeout(() => {
+          sync();
+        }, 30_000);
       });
-    }, 5_000);
+    };
 
     await MissingVersionsManager.create(this);
   }
