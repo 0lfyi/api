@@ -277,7 +277,6 @@ class BlockchainWatcher {
                 ON CONFLICT ("id", "transactionHash")
                 DO UPDATE SET
                   "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "createdAddress" = EXCLUDED."createdAddress",
                   "amount" = EXCLUDED."amount",
                   "currency" = EXCLUDED."currency"
               `);
