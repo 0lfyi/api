@@ -91,41 +91,41 @@ class BlockchainWatcher {
       if (transaction.events && transaction.events.length > 0) {
         const { length } = transaction.events;
 
-        promises.push(prisma.$executeRaw`
-          DELETE FROM "NewBlockEvent"
-          WHERE "transactionHash" = ${transactionHash}
-          AND "id" > ${length - 1}
-        `);
+        // promises.push(prisma.$executeRaw`
+        //   DELETE FROM "NewBlockEvent"
+        //   WHERE "transactionHash" = ${transactionHash}
+        //   AND "id" > ${length - 1}
+        // `);
 
-        promises.push(prisma.$executeRaw`
-          DELETE FROM "ReceivedPaymentEvent"
-          WHERE "transactionHash" = ${transactionHash}
-          AND "id" > ${length - 1}
-        `);
+        // promises.push(prisma.$executeRaw`
+        //   DELETE FROM "ReceivedPaymentEvent"
+        //   WHERE "transactionHash" = ${transactionHash}
+        //   AND "id" > ${length - 1}
+        // `);
 
-        promises.push(prisma.$executeRaw`
-          DELETE FROM "SentPaymentEvent"
-          WHERE "transactionHash" = ${transactionHash}
-          AND "id" > ${length - 1}
-        `);
+        // promises.push(prisma.$executeRaw`
+        //   DELETE FROM "SentPaymentEvent"
+        //   WHERE "transactionHash" = ${transactionHash}
+        //   AND "id" > ${length - 1}
+        // `);
 
-        promises.push(prisma.$executeRaw`
-          DELETE FROM "MintEvent"
-          WHERE "transactionHash" = ${transactionHash}
-          AND "id" > ${length - 1}
-        `);
+        // promises.push(prisma.$executeRaw`
+        //   DELETE FROM "MintEvent"
+        //   WHERE "transactionHash" = ${transactionHash}
+        //   AND "id" > ${length - 1}
+        // `);
 
-        promises.push(prisma.$executeRaw`
-          DELETE FROM "Event"
-          WHERE "transactionHash" = ${transactionHash}
-          AND "id" > ${length - 1}
-        `);
+        // promises.push(prisma.$executeRaw`
+        //   DELETE FROM "Event"
+        //   WHERE "transactionHash" = ${transactionHash}
+        //   AND "id" > ${length - 1}
+        // `);
 
-        promises.push(prisma.$executeRaw`
-          DELETE FROM "NewEpochEvent"
-          WHERE "transactionHash" = ${transactionHash}
-          AND "id" > ${length - 1}
-        `);
+        // promises.push(prisma.$executeRaw`
+        //   DELETE FROM "NewEpochEvent"
+        //   WHERE "transactionHash" = ${transactionHash}
+        //   AND "id" > ${length - 1}
+        // `);
 
         for (let i = 0; i < length; ++i) {
           const event = transaction.events[i];
