@@ -5,6 +5,7 @@ import logger from './logger.js';
 import BlockchainWatcher from './modules/blockchain-watcher/BlockchainWatcher.js';
 import reportMetrics from './jobs/report-metrics/index.js';
 import VitalsWatcher from './modules/vitals-watcher/VitalsWatcher.js';
+import { weeksToDays } from 'date-fns';
 
 const schedule = (name: string, cronRule: string, handler: () => Promise<void>) => {
   const job = nodeSchedule.scheduleJob(cronRule, () => {
@@ -47,4 +48,17 @@ export const listen = async (): Promise<void> => {
   if (config.app.roles.includes('jobs-runner')) {
     schedule('Report Metrics', `* * * * * *`, reportMetrics);
   }
+
+  try {
+    const blockchainWatcher = await BlockchainWatcher.create();
+    await blockchainWatcher.syncTransactions(0);
+    await blockchainWatcher.stop();
+  } catch (err) {
+    if (err !== 'cannot write parquet file with zero rows') {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  console.log('done');
 };

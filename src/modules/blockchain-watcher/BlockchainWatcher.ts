@@ -1,11 +1,15 @@
 /* eslint-disable no-bitwise */
 
 import _ from 'lodash';
+import fs from 'fs';
+import parquet from 'parquetjs';
 import prisma from '../../services/prisma.js';
 import rootLogger from '../../logger.js';
 import Provider from '../0l/Provider.js';
 import MissingVersionsManager from './MissingVersionsManager.js';
 import config from '../../config.js';
+import * as schema from './parquet-schema.js';
+import { TransactionView } from '../0l/types.js';
 
 const getAccountRoleType = (type: string): string | undefined => {
   const types = new Map([
@@ -70,6 +74,22 @@ class BlockchainWatcher {
 
   private logger = rootLogger.child({ source: this.constructor.name });
 
+  private newBlockEventWriter: parquet.ParquetWriter;
+
+  private sentPaymentEventWriter: parquet.ParquetWriter;
+
+  private receivedPaymentEventWriter: parquet.ParquetWriter;
+
+  private createAccountEventWriter: parquet.ParquetWriter;
+
+  private mintEventWriter: parquet.ParquetWriter;
+
+  private burnEventWriter: parquet.ParquetWriter;
+
+  private newEpochEventWriter: parquet.ParquetWriter;
+
+  private userTransactionWriter: parquet.ParquetWriter;
+
   private constructor() {
     this.provider = new Provider(config.providerUrl);
   }
@@ -81,437 +101,152 @@ class BlockchainWatcher {
   }
 
   public async syncTransactions(version: number) {
-    const transactions = await this.provider.getTransactions(version, 1, true);
+    // const transactions = await this.provider.getTransactions(version, 1, true);
+    const transactions: TransactionView[] = JSON.parse(
+      await fs.promises.readFile(
+        '/Users/will/Projects/133_DATA_PIPELINE/52671000-52671999_clean.json',
+        'utf-8'
+      )
+    );
 
     const promises: Promise<unknown>[] = [];
 
     for (const transaction of transactions) {
-      const transactionHash = Buffer.from(transaction.hash, 'hex');
+      // const transactionHash = Buffer.from(transaction.hash, 'hex');
 
       if (transaction.events && transaction.events.length > 0) {
         const { length } = transaction.events;
 
-        // promises.push(prisma.$executeRaw`
-        //   DELETE FROM "NewBlockEvent"
-        //   WHERE "transactionHash" = ${transactionHash}
-        //   AND "id" > ${length - 1}
-        // `);
-
-        // promises.push(prisma.$executeRaw`
-        //   DELETE FROM "ReceivedPaymentEvent"
-        //   WHERE "transactionHash" = ${transactionHash}
-        //   AND "id" > ${length - 1}
-        // `);
-
-        // promises.push(prisma.$executeRaw`
-        //   DELETE FROM "SentPaymentEvent"
-        //   WHERE "transactionHash" = ${transactionHash}
-        //   AND "id" > ${length - 1}
-        // `);
-
-        // promises.push(prisma.$executeRaw`
-        //   DELETE FROM "MintEvent"
-        //   WHERE "transactionHash" = ${transactionHash}
-        //   AND "id" > ${length - 1}
-        // `);
-
-        // promises.push(prisma.$executeRaw`
-        //   DELETE FROM "Event"
-        //   WHERE "transactionHash" = ${transactionHash}
-        //   AND "id" > ${length - 1}
-        // `);
-
-        // promises.push(prisma.$executeRaw`
-        //   DELETE FROM "NewEpochEvent"
-        //   WHERE "transactionHash" = ${transactionHash}
-        //   AND "id" > ${length - 1}
-        // `);
-
         for (let i = 0; i < length; ++i) {
           const event = transaction.events[i];
+
           switch (event.data.type) {
             case 'newblock':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "NewBlockEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "round",
-                    "proposer",
-                    "proposedTime"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${event.data.round},
-                    ${Buffer.from(event.data.proposer, 'hex')},
-                    ${event.data.proposed_time}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "round" = EXCLUDED."round",
-                  "proposer" = EXCLUDED."proposer",
-                  "proposedTime" = EXCLUDED."proposedTime"
-              `);
+              promises.push(
+                this.newBlockEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+
+                  round: event.data.round,
+                  proposer: Buffer.from(event.data.proposer, 'hex') as any,
+                  proposedTime: event.data.proposed_time,
+                })
+              );
               break;
 
             case 'receivedpayment':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "ReceivedPaymentEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "amount",
-                    "currency",
-                    "receiver",
-                    "sender",
-                    "metadata"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${event.data.amount.amount},
-                    ${event.data.amount.currency},
-                    ${Buffer.from(event.data.receiver, 'hex')},
-                    ${Buffer.from(event.data.sender, 'hex')},
-                    ${Buffer.from(event.data.metadata, 'hex')}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "amount" = EXCLUDED."amount",
-                  "currency" = EXCLUDED."currency",
-                  "receiver" = EXCLUDED."receiver",
-                  "sender" = EXCLUDED."sender",
-                  "metadata" = EXCLUDED."metadata"
-              `);
+              promises.push(
+                this.receivedPaymentEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+
+                  amount: event.data.amount.amount,
+                  currency: event.data.amount.currency,
+                  receiver: Buffer.from(event.data.receiver, 'hex') as any,
+                  sender: Buffer.from(event.data.sender, 'hex') as any,
+                  metadata: Buffer.from(event.data.metadata, 'hex') as any,
+                })
+              );
               break;
 
             case 'sentpayment':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "SentPaymentEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "amount",
-                    "currency",
-                    "receiver",
-                    "sender",
-                    "metadata"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${event.data.amount.amount},
-                    ${event.data.amount.currency},
-                    ${Buffer.from(event.data.receiver, 'hex')},
-                    ${Buffer.from(event.data.sender, 'hex')},
-                    ${Buffer.from(event.data.metadata, 'hex')}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "amount" = EXCLUDED."amount",
-                  "currency" = EXCLUDED."currency",
-                  "receiver" = EXCLUDED."receiver",
-                  "sender" = EXCLUDED."sender",
-                  "metadata" = EXCLUDED."metadata"
-              `);
+              promises.push(
+                this.sentPaymentEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+
+                  amount: event.data.amount.amount,
+                  currency: event.data.amount.currency,
+                  receiver: Buffer.from(event.data.receiver, 'hex') as any,
+                  sender: Buffer.from(event.data.sender, 'hex') as any,
+                  metadata: Buffer.from(event.data.metadata, 'hex') as any,
+                })
+              );
               break;
 
             case 'createaccount':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "CreateAccountEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "createdAddress",
-                    "roleId"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${Buffer.from(event.data.created_address, 'hex')},
-                    ${event.data.role_id}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "createdAddress" = EXCLUDED."createdAddress",
-                  "roleId" = EXCLUDED."roleId"
-              `);
-              promises.push(this.syncAccount(event.data.created_address));
+              promises.push(
+                this.createAccountEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+                  createdAddress: Buffer.from(event.data.created_address, 'hex') as any,
+                  roleId: event.data.role_id,
+                })
+              );
               break;
 
             case 'mint':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "MintEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "amount",
-                    "currency"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${event.data.amount.amount},
-                    ${event.data.amount.currency}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "amount" = EXCLUDED."amount",
-                  "currency" = EXCLUDED."currency"
-              `);
+              promises.push(
+                this.mintEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+                  amount: event.data.amount.amount,
+                  currency: event.data.amount.currency,
+                })
+              );
               break;
 
             case 'burn':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "BurnEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "amount",
-                    "currency",
-                    "preburnAddress"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${event.data.amount.amount},
-                    ${event.data.amount.currency},
-                    ${Buffer.from(event.data.preburn_address, 'hex')}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "amount" = EXCLUDED."amount",
-                  "currency" = EXCLUDED."currency",
-                  "preburnAddress" = EXCLUDED."preburnAddress"
-              `);
+              promises.push(
+                this.burnEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+                  amount: event.data.amount.amount,
+                  currency: event.data.amount.currency,
+                  preburnAddress: Buffer.from(event.data.preburn_address, 'hex') as any,
+                })
+              );
               break;
 
             case 'newepoch':
-              promises.push(prisma.$executeRaw`
-                INSERT INTO "NewEpochEvent"
-                  (
-                    "id",
-                    "transactionHash",
-                    "sequenceNumber",
-                    "epoch"
-                  )
-                VALUES
-                  (
-                    ${i},
-                    ${Buffer.from(transaction.hash, 'hex')},
-                    ${event.sequence_number},
-                    ${event.data.epoch}
-                  )
-                ON CONFLICT ("id", "transactionHash")
-                DO UPDATE SET
-                  "sequenceNumber" = EXCLUDED."sequenceNumber",
-                  "epoch" = EXCLUDED."epoch"
-              `);
+              promises.push(
+                this.newEpochEventWriter.appendRow({
+                  version: transaction.version,
+                  timestamp: event.timestamp_usecs,
+                  sequenceNumber: event.sequence_number,
+                  epoch: event.data.epoch,
+                })
+              );
               break;
 
             default:
               console.log(event.data);
               throw new Error(`Implement ${event.data.type} event please`);
           }
-
-          promises.push(prisma.$executeRaw`
-            INSERT INTO "Event"
-              (
-                "id",
-                "key",
-                "transactionHash",
-                "sequenceNumber",
-                "type"
-              )
-            VALUES
-              (
-                ${i},
-                ${Buffer.from(event.key, 'hex')},
-                ${Buffer.from(transaction.hash, 'hex')},
-                ${event.sequence_number},
-                (${getEventType(event.data.type)!})::"EventType"
-              )
-            ON CONFLICT ("id", "transactionHash")
-            DO UPDATE SET
-              "key" = EXCLUDED."key",
-              "transactionHash" = EXCLUDED."transactionHash",
-              "sequenceNumber" = EXCLUDED."sequenceNumber",
-              "type" = EXCLUDED."type"
-          `);
         }
-      } else {
-        promises.push(
-          prisma.$executeRaw`
-            DELETE FROM "NewBlockEvent"
-            WHERE "transactionHash" = ${transactionHash};
-          `,
-
-          prisma.$executeRaw`
-            DELETE FROM "ReceivedPaymentEvent"
-            WHERE "transactionHash" = ${transactionHash};
-          `,
-
-          prisma.$executeRaw`
-            DELETE FROM "SentPaymentEvent"
-            WHERE "transactionHash" = ${transactionHash};
-          `,
-
-          prisma.$executeRaw`
-            DELETE FROM "MintEvent"
-            WHERE "transactionHash" = ${transactionHash};
-          `,
-
-          prisma.$executeRaw`
-            DELETE FROM "Event"
-            WHERE "transactionHash" = ${transactionHash};
-          `,
-
-          prisma.$executeRaw`
-            DELETE FROM "NewEpochEvent"
-            WHERE "transactionHash" = ${transactionHash};
-          `
-        );
       }
 
       const transactionType: string = transaction.transaction.type;
       switch (transaction.transaction.type) {
         case 'blockmetadata':
-          promises.push(prisma.$executeRaw`
-            INSERT INTO "BlockMetadataTransaction"
-              (
-                "hash",
-                "timestampUsecs"
-              )
-            VALUES
-              (
-                ${Buffer.from(transaction.hash, 'hex')},
-                ${transaction.transaction.timestamp_usecs}
-              )
-            ON CONFLICT DO NOTHING
-          `);
+          // noop
           break;
 
         case 'user':
-          promises.push(prisma.$executeRaw`
-            INSERT INTO "UserTransaction"
-              (
-                "hash",
-                "sender",
-                "signatureScheme",
-                "signature",
-                "publicKey",
-                "secondarySigners",
-                "secondarySignatureSchemes",
-                "secondarySignatures",
-                "secondaryPublicKeys",
-                "sequenceNumber",
-                "chainId",
-                "maxGasAmount",
-                "gasUnitPrice",
-                "gasCurrency",
-                "expirationTimestampSecs",
-                "scriptHash",
-                "scriptBytes",
-                "script"
-              )
-            VALUES
-              (
-                ${Buffer.from(transaction.hash, 'hex')},
-                ${Buffer.from(transaction.transaction.sender, 'hex')},
-                ${transaction.transaction.signature_scheme},
-                ${Buffer.from(transaction.transaction.signature, 'hex')},
-                ${Buffer.from(transaction.transaction.public_key, 'hex')},
-                ${
-                  transaction.transaction.secondary_signers
-                    ? transaction.transaction.secondary_signers.map((signer) =>
-                        Buffer.from(signer, 'hex')
-                      )
-                    : []
-                },
-                ${
-                  transaction.transaction.secondary_signature_schemes
-                    ? transaction.transaction.secondary_signature_schemes
-                    : []
-                },
-                ${
-                  transaction.transaction.secondary_signatures
-                    ? transaction.transaction.secondary_signatures.map((signature) =>
-                        Buffer.from(signature, 'hex')
-                      )
-                    : []
-                },
-                ${
-                  transaction.transaction.secondary_public_keys
-                    ? transaction.transaction.secondary_public_keys.map((publicKey) =>
-                        Buffer.from(publicKey, 'hex')
-                      )
-                    : []
-                },
-                ${transaction.transaction.sequence_number},
-                ${transaction.transaction.chain_id},
-                ${transaction.transaction.max_gas_amount},
-                ${transaction.transaction.gas_unit_price},
-                ${transaction.transaction.gas_currency},
-                ${transaction.transaction.expiration_timestamp_secs},
-                ${Buffer.from(transaction.transaction.script_hash, 'hex')},
-                ${Buffer.from(transaction.transaction.script_bytes, 'hex')},
-                ${transaction.transaction.script}
-              )
-            ON CONFLICT DO NOTHING
-          `);
+          promises.push(
+            this.userTransactionWriter.appendRow({
+              version: transaction.version,
+              timestamp: transaction.timestamp_usecs,
+              sequenceNumber: transaction.transaction.sequence_number,
+              gasUsed: transaction.gas_used,
+              maxGasAmount: transaction.transaction.max_gas_amount,
+              gasUnitPrice: transaction.transaction.gas_unit_price,
+              gasCurrency: transaction.transaction.gas_currency,
+              expirationTimestampSecs: transaction.transaction.expiration_timestamp_secs,
+            })
+          );
           break;
 
         default: {
           throw new Error(`Unsupported transaction type ${transactionType}`);
         }
       }
-
-      promises.push(prisma.$executeRaw`
-        INSERT INTO "Transaction"
-          (
-            "hash",
-            "version",
-            "bytes",
-            "gasUsed",
-            "vmStatus",
-            "type"
-          )
-        VALUES
-          (
-            ${Buffer.from(transaction.hash, 'hex')},
-            ${transaction.version},
-            ${Buffer.from(transaction.bytes, 'hex')},
-            ${transaction.gas_used},
-            (${getVMStatusType(transaction.vm_status.type)!})::"VMStatus",
-            (${getTransactionType(transaction.transaction.type)!})::"TransactionType"
-          )
-        ON CONFLICT DO NOTHING
-      `);
     }
 
     await Promise.all(promises);
@@ -556,6 +291,19 @@ class BlockchainWatcher {
       )
       ON CONFLICT DO NOTHING
     `;
+  }
+
+  public async stop() {
+    await Promise.all([
+      this.newBlockEventWriter.close(),
+      this.sentPaymentEventWriter.close(),
+      this.receivedPaymentEventWriter.close(),
+      this.createAccountEventWriter.close(),
+      this.mintEventWriter.close(),
+      this.burnEventWriter.close(),
+      this.newEpochEventWriter.close(),
+      this.userTransactionWriter.close(),
+    ]);
   }
 
   private async syncCurrencies() {
@@ -610,15 +358,55 @@ class BlockchainWatcher {
   }
 
   private async init() {
-    const sync = () => {
-      this.syncVersion().finally(() => {
-        setTimeout(() => {
-          sync();
-        }, 30_000);
-      });
-    };
+    this.newBlockEventWriter = await parquet.ParquetWriter.openFile(
+      schema.NewBlockEvent,
+      'new-block-events.parquet'
+    );
 
-    await MissingVersionsManager.create(this);
+    this.sentPaymentEventWriter = await parquet.ParquetWriter.openFile(
+      schema.SentPaymentEvent,
+      'sent-payment-events.parquet'
+    );
+
+    this.receivedPaymentEventWriter = await parquet.ParquetWriter.openFile(
+      schema.ReceivedPaymentEvent,
+      'received-payment-events.parquet'
+    );
+
+    this.createAccountEventWriter = await parquet.ParquetWriter.openFile(
+      schema.CreateAccountEvent,
+      'create-account-events.parquet'
+    );
+
+    this.mintEventWriter = await parquet.ParquetWriter.openFile(
+      schema.MintEvent,
+      'mint-events.parquet'
+    );
+
+    this.burnEventWriter = await parquet.ParquetWriter.openFile(
+      schema.BurnEvent,
+      'burn-events.parquet'
+    );
+
+    this.newEpochEventWriter = await parquet.ParquetWriter.openFile(
+      schema.NewEpochEvent,
+      'new-epoch-events.parquet'
+    );
+
+    this.userTransactionWriter = await parquet.ParquetWriter.openFile(
+      schema.UserTransaction,
+      'user-transactions.parquet'
+    );
+
+    // const sync = () => {
+    //   this.syncVersion().finally(() => {
+    //     setTimeout(() => {
+    //       sync();
+    //     }, 30_000);
+    //   });
+    // };
+
+    // await MissingVersionsManager.create(this);
   }
 
   private async getMax(): Promise<number | undefined> {

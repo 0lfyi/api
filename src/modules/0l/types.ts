@@ -93,12 +93,14 @@ type VMStatusView =
 
 export interface TransactionView {
   version: number;
+  timestamp_usecs: number;
   transaction: TransactionDataView;
   vm_status: VMStatusView;
   hash: string;
   bytes: string;
   gas_used: number;
   events?: EventView[];
+
 }
 
 interface AmountView {
@@ -231,6 +233,7 @@ export interface EventView {
   key: string;
   sequence_number: number;
   transaction_version: number;
+  timestamp_usecs: number;
   data: EventDataView;
 }
 
