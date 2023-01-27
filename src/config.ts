@@ -35,6 +35,14 @@ const config = {
     host: '',
     token: '',
   },
+  s3: {
+    accessKeyId: '',
+    secretAccessKey: '',
+    endpoint: '',
+    // region: '',
+    // s3ForcePathStyle: true,
+    // signatureVersion: '',
+  },
 };
 
 export const loadConfig = async (): Promise<typeof config> => {
@@ -78,6 +86,13 @@ export const loadConfig = async (): Promise<typeof config> => {
       bucket: ENV.INFLUXDB_BUCKET,
       host: ENV.INFLUXDB_HOST,
       token: ENV.INFLUXDB_TOKEN,
+    },
+    s3: {
+      accessKeyId: ENV.S3_ACCESS_KEY_ID,
+      secretAccessKey: ENV.S3_SECRET_ACCESS_KEY,
+      endpoint: ENV.S3_ENDPOINT,
+      s3ForcePathStyle: true,
+      signatureVersion: 'v4',
     },
   });
 
